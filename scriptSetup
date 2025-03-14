@@ -49,11 +49,9 @@ wget -P ~/.config/ -O - https://codeload.github.com/VongoSanDi/dotfiles/tar.gz/m
 curl -fsSL https://deb.nodesource.com/setup_current.x | sudo bash -
 sudo apt install -y nodejs
 
-## Installation yarn
-sudo npm install -g yarn typescript typescript-language-server eslint_d
-
-## Ajout du path de yarn
-export PATH="$PATH:$(yarn global bin)"
+## Installation bun
+curl -fsSL https://bun.sh/install | bash
+exec /usr/bin/zsh
 
 ## Installation Vue
 sudo yarn global add @vue/cli
