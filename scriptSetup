@@ -1,0 +1,114 @@
+#!/bin/zsh
+
+# Mise à jours après installation
+sudo apt update -y && sudo apt upgrade -y
+
+# Passage à sid
+https://debian-facile.org/atelier:chantier:maintenir-debian-sid#eviter-les-bugs-graves-avec-apt-listbugs
+
+## Installation outils complémentaires
+sudo apt install zsh git exa wget curl clang tree ripgrep git cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 acpi wl-clipboard warp-terminal
+
+# Font: FantasqueSanMono
+# Depuis le site https://www.nerdfonts.com/font-downloads
+# Ou via wget
+wget -P ~/Downloads/font https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FantasqueSansMono.zip
+
+# On vérifie si le dossier existe déjà ou pas
+if [ ! -d "~/.local/share/fonts/" ]
+then
+  mkdir ~/.local/share/fonts
+fi
+
+# Ensuite on decompresse la font dans le dossier
+sudo unzip ~/Downloads/font/FantasqueSansMono.zip -d /usr/local/share/fonts
+
+#Ensuite il faut manuellement sélectionné la font dans le terminal de ton choix TODO: On peut pas l'automatiser ? En vérifiant le terminal par défaut ?
+
+# Fais en sorte que les fichiers de configurations des programmes se mettent dans .config
+export XDG_CONFIG_HOME="$HOME/.config"
+
+## Installation des drivers Nvidia
+sudo apt install nvidia-driver -y
+
+## Installation Chromium -> TODO Pas pour le moment
+#sudo apt install apt install chromium chromium-l10n -y
+
+## Installation et activation zsh
+# Où installer les fichiers de config
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+wget -P ~/.config/ https://raw.githubusercontent.com/VongoSanDi/dotfiles/master/zsh/aliases
+wget -P ~/ https://raw.githubusercontent.com/VongoSanDi/dotfiles/master/zsh/.zshenv
+chsh -s $(which zsh)
+wget -P ~/.config/ -O - https://codeload.github.com/VongoSanDi/dotfiles/tar.gz/master | \
+  tar -xz --strip=2 dotfiles-master/zsh/zsh
+# Tuto https://thevaluable.dev/zsh-install-configure-mouseless/
+# Commandes pour zsh: https://www.sitepoint.com/zsh-commands-plugins-aliases-tools/
+
+## Installation nodejs + npm
+curl -fsSL https://deb.nodesource.com/setup_current.x | sudo bash -
+sudo apt install -y nodejs
+
+## Installation yarn
+sudo npm install -g yarn typescript typescript-language-server eslint_d
+
+## Ajout du path de yarn
+export PATH="$PATH:$(yarn global bin)"
+
+## Installation Vue
+sudo yarn global add @vue/cli
+
+## Ajout de Golang
+# https://go.dev/doc/install
+cd ~/Downloads/
+wget "https://go.dev/dl/$(curl 'https://go.dev/VERSION?m=text').linux-amd64.tar.gz" && sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go*.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+cd ~
+
+## Installation nvim
+# https://github.com/neovim/neovim/releases
+# cd ~/Downloads/
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+chmod u+x nvim-linux-x86_64.appimage && mv nvim-linux-x86_64.appimage nvim
+sudo mv nvim /usr/local/bin
+cd ~
+
+# Eventuellement installer les packages pour FUSE, peut être nécessaire pour utiliser une AppImpage
+https://docs.appimage.org/user-guide/troubleshooting/fuse.html
+
+## Lazygit
+# https://github.com/jesseduffield/lazygit?tab=readme-ov-file#ubuntu
+go install github.com/jesseduffield/lazygit@latest
+# Si le bin se trouve dans ~go/bin
+cp ~/go/bin/lazygit /usr/local/bin
+
+## GLOW Utiliser pour faire de la preview de markdown
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+sudo apt update && sudo apt install glow
+
+## Install Joplin
+
+## ZSH
+# Pas besoin de configurer de template, on utilise starship plus loin
+# https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
+zsh
+chsh -s $(which zsh)
+Test that it worked with echo $SHELL. Expected result: /bin/zsh or similar.
+
+## Starship
+curl -sS https://starship.rs/install.sh | sh
+# Dans .zshrc
+echo "eval \"$(starship init zsh)\"" >> 
+# sortir du fichier et taper dans le terminal
+source ~/.zshrc
+
+# GitHub CLI
+(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+	&& sudo apt update \
+	&& sudo apt install gh -y
