@@ -7,6 +7,7 @@ ln -sf ~/.dotfile/nvim ~/.config/nvim
 ln -s ~/.dotfile/starship.toml ~/.config/starship.toml
 ln -s ~/.dotfile/zsh/.zshenv ~/.zshenv
 ln -s ~/.dotfile/zsh/.zshrc ~/.zshrc
+ln -s ~/.dotfile/kitty ~/.config/kitty
 
 
 echo "✅ Dotfiles installés avec succès !"
