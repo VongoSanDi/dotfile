@@ -1,4 +1,8 @@
 [ -z "$ZDOTDIR" ] && source ~/.zshenv
+
+export LANG=en_GB.UTF-8
+export LC_ALL=en_GB.UTF-8
+
 # Activer Starship
 eval "$(starship init zsh)"
 
