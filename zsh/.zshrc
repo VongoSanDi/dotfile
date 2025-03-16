@@ -66,3 +66,10 @@ setopt SHARE_HISTORY
 
 # Source aliases file
 source $DOTFILES/aliases/aliases
+
+# bun completions
+[ -s "/home/vongo/.bun/_bun" ] && source "/home/vongo/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
