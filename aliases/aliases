@@ -16,9 +16,9 @@ alias bigf='find / -xdev -type f -size +500M' # display "big" files > 500M
 
 TREE_IGNORE="cache|log|logs|node_modules|vendor"
 
-alias ls=' ls --group-directories-first'
+alias ls=' ls --color=auto'
 alias la=' ls -alh'
-alias ll=' ls --git -l'
+alias ll=' ls -l'
 alias lt=' ls --tree -D -L 2 -I ${TREE_IGNORE}'
 alias ltt=' ls --tree -D -L 3 -I ${TREE_IGNORE}'
 alias lttt=' ls --tree -D -L 4 -I ${TREE_IGNORE}'
