@@ -13,17 +13,17 @@ update_packages() {
     echo
 }
 
-get_local_kitty_version {
-  kitty -v | head -n 1 | awk '{print $2}'
-}
+# get_local_kitty_version {
+#   kitty -v | head -n 1 | awk '{print $2}'
+# }
 
-get_latest_kitty_version {
-  curl --silent "https://api.github.com/repos/kovidgoyal/kitty/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/'
-}
-
-update_kitty {
-  local latest_version = $(get_latest_kitty_version)
-}
+# get_latest_kitty_version {
+#   curl --silent "https://api.github.com/repos/kovidgoyal/kitty/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/'
+# }
+#
+# update_kitty {
+#   local latest_version = $(get_latest_kitty_version)
+# }
 
 # Function to get the current installed version of Neovim
 get_local_nvim_version() {
