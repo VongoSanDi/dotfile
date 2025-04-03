@@ -13,17 +13,6 @@ update_packages() {
     echo
 }
 
-# get_local_kitty_version {
-#   kitty -v | head -n 1 | awk '{print $2}'
-# }
-
-# get_latest_kitty_version {
-#   curl --silent "https://api.github.com/repos/kovidgoyal/kitty/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/'
-# }
-#
-# update_kitty {
-#   local latest_version = $(get_latest_kitty_version)
-# }
 
 # Function to get the current installed version of Neovim
 get_local_nvim_version() {
@@ -56,7 +45,6 @@ update_nvim() {
 # Function to get the current installed version of Starship
 get_local_starship_version() {
     starship --version | head -n 1 | awk '{print $2}'
-    
 }
 
 # Function to get the latest version of Starship available on GitHub
@@ -83,6 +71,21 @@ update_starship() {
     rm -rf $temp_dir
 
     echo -e "${GREEN}Starship updated to version $latest_version."
+}
+
+get_local_kitty_version() {
+  kitty -v | head -n 1 | awk '{print $2}'
+}
+
+get_latest_kitty_version() {
+  curl --silent "https://api.github.com/repos/kovidgoyal/kitty/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/'
+}
+
+update_kitty() {
+  local latest_version = $(get_latest_kitty_version)
+  echo -e "${BLUE}Updating Kitty terminal to $latest_version..."
+  curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+  echo -e "${GREEN}Kitty updated to version $latest_version."
 }
 
 # Function to get the latest version of Discord available on their website
@@ -147,6 +150,24 @@ if [[ "$local_starship_version" != "$latest_starship_version" ]]; then
     fi
 else
     echo -e "${GREEN}Starship is already up to date."
+fi
+echo
+
+# Check and update Kitty terminal
+local_kitty_version=$(get_local_starship_version)
+latest_kitty_version=$(get_latest_starship_version)
+echo -e "${YELLOW}Local Kitty version: $local_kitty_version"
+echo -e "${YELLOW}Latest Kitty version available: $latest_kitty_version"
+if [[ "$local_kitty_version" != "$latest_kitty_version" ]]; then
+    read -r "REPLY?${YELLOW}A new version of Kitty is available. Do you want to update Kitty? (Y/n) " REPLY
+    REPLY=${REPLY:-Y}
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        update_kitty
+    else
+        echo -e "${RED}Kitty update canceled."
+    fi
+else
+    echo -e "${GREEN}Kitty is already up to date."
 fi
 echo
 
