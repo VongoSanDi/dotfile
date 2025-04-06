@@ -8,6 +8,7 @@ https://debian-facile.org/atelier:chantier:maintenir-debian-sid#eviter-les-bugs-
 
 ## Installation outils complémentaires
 sudo apt install zsh git exa wget curl clang tree ripgrep git cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 acpi wl-clipboard warp-terminal
+systemd-resolved # For dnscrypt-proxy
 
 # Install kitty
 # https://sw.kovidgoyal.net/kitty/binary/
@@ -113,3 +114,9 @@ source ~/.zshrc
 	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
 	&& sudo apt update \
 	&& sudo apt install gh -y
+
+# After all the packages are installed launch the install.zsh
+zsh ~/.dotfile/install.sh
+
+# After installing dnscrypt-proxy launch the install.zsh from .dotfile to cp config files
+zsh ~/.dotfile/dnscrypt-proxy/install.sh

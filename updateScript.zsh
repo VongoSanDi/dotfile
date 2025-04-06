@@ -1,4 +1,5 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+set -euo pipefail
 
 # Define color variables
 RED="\033[0;31m" # Report cancellations or errors
