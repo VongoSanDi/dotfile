@@ -1,6 +1,22 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
+echo "dnscrypt-proxy & systemd-resolved installation ..."
+sudo apt install systemd-resolved && sudo apt install -t unstable dnscrypt-proxy
+echo "Installation completed"
+
+echo "Remove the previous dnscrypt-proxy service"
+sudo dnscrypt-proxy -service stop
+sudo dnscrypt-proxy -service uninstall
+
+echo "Disable the socket because it's not recommanded and useless in my situation"
+# It's useless because I use dnscrypt-proxy as a daemon so it's always running
+# The socket job is to receive request and then enable the daemon but like I said in my case it's useless and worse it run in the same port than dnscrypt-proxy
+sudo systemctl disable dnscrypt-proxy.socket
+
+echo "Copy the example configuration files to /etc/dnscrypt-proxy/"
+sudo cp /usr/share/doc/dnscrypt-proxy/examples/* /etc/dnscrypt-proxy/
+
 echo "🔧 Installation de la config dnscrypt-proxy..."
 
 CONFIG_DIR="$HOME/.dotfile/dnscrypt-proxy"

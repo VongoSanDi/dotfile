@@ -2,6 +2,7 @@
 export PATH="$HOME/.local/bin:$PATH"
 export LANG="fr_FR.UTF-8"
 export DOTFILES="$HOME/.dotfile"
+export ZDOTDIR="$DOTFILES/zsh"
 
 # 📁 XDG Directories
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -13,7 +14,6 @@ export EDITOR="nvim"
 export VISUAL="nvim"
 
 # 🛠️ ZSH
-export ZDOTDIR="$HOME/.dotfile/zsh"
 export HISTFILE="$ZDOTDIR/.zhistory"
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -42,8 +42,7 @@ elif [ -s "$NVM_DIR/nvm.sh" ]; then
 fi
 
 # 🖥️ Debian Sid specific
-export APT_LISTCHANGES_FRONTEND=none
-export DEBIAN_FRONTEND=noninteractive
-
-# 🔗 Créer lien symbolique vers ~/.zshrc si nécessaire
-[ -e "$HOME/.zshrc" ] || ln -s "$ZDOTDIR/.zshrc" "$HOME/.zshrc"
+if grep -q "debian" /etc/os-release 2>/dev/null; then
+  export APT_LISTCHANGES_FRONTEND=none
+  export DEBIAN_FRONTEND=noninteractive
+fi

@@ -1,26 +1,34 @@
-[ -z "$ZDOTDIR" ] && source ~/.zshenv
-
+# ─────────────────────────────────────
+# 🛠️  ENV
+# ─────────────────────────────────────
 export LANG=en_GB.UTF-8
 export LC_ALL=en_GB.UTF-8
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Activer Starship
+# ─────────────────────────────────────
+# 🚀 Starship prompt
+# ─────────────────────────────────────
 eval "$(starship init zsh)"
 
-# Activer les suggestions de commande
+# ─────────────────────────────────────
+# ⚙️  Plugins Zsh
+# ─────────────────────────────────────
+# Autosuggestions
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# Activer la coloration syntaxique
+# Syntax highlighting
 source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# Config de l'historique
-HISTFILE=~/.zsh_history
-HISTSIZE=5000
-SAVEHIST=5000
+# ─────────────────────────────────────
+# ⚙️  ZSH config
+# ─────────────────────────────────────
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 
 # Activer l'autocomplétion améliorée
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+compinit -d "$ZDOTDIR/.zcompdump"
 
 # Go to folder path without using cd
 setopt AUTO_CD              
@@ -64,12 +72,10 @@ setopt HIST_REDUCE_BLANKS
 # Partage l'historique entre sessions
 setopt SHARE_HISTORY
 
-# Source aliases file
+# ─────────────────────────────────────
+# 📁 Aliases
+# ─────────────────────────────────────
 source $DOTFILES/aliases/aliases
 
 # bun completions
-[ -s "/home/vongo/.bun/_bun" ] && source "/home/vongo/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

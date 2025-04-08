@@ -8,7 +8,6 @@ https://debian-facile.org/atelier:chantier:maintenir-debian-sid#eviter-les-bugs-
 
 ## Installation outils complémentaires
 sudo apt install zsh git exa wget curl clang tree ripgrep git cmake pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev python3 acpi wl-clipboard warp-terminal
-systemd-resolved # For dnscrypt-proxy
 
 # Install kitty
 # https://sw.kovidgoyal.net/kitty/binary/

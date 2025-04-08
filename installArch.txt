@@ -1,0 +1,223 @@
+# Clavier AZERTY
+loadkeys fr
+
+# Partitionnement
+# If the disk from which you want to boot already has an EFI system partition, do not create another one, but use the existing partition instead.
+fdisk -l -> Trouver le bon disque (pour nvme c'est généralement nvme0n1)
+sudo fdisk /dev/nvme0n1
+
+g                   ← créer une nouvelle table GPT
+
+n                   ← créer partition EFI
+  Partition number: 1
+  First sector: Entrée
+  Last sector: +1G
+
+t                   ← changer le type
+  Partition number: 1
+  Hex code: 1       ← EFI System
+
+n                   ← créer partition root (/)
+  Partition number: 2
+  First sector: Entrée
+  Last sector: +100G
+
+n                   ← créer partition swap
+  Partition number: 3
+  First sector: Entrée
+  Last sector: +4G
+
+t                   ← changer le type
+  Partition number: 3
+  Hex code: 19      ← Linux swap
+
+n                   ← créer partition /home
+  Partition number: 4
+  First sector: Entrée
+  Last sector: Entrée  ← (utilise tout le reste du disque)
+
+p                   ← afficher la table pour vérifier
+w                   ← écrire et quitter
+
+# Formattage des partition
+sudo mkfs.fat -F32 /dev/nvme0n1p1        # EFI
+sudo mkfs.ext4 /dev/nvme0n1p2            # root
+sudo mkswap /dev/nvme0n1p3               # swap
+sudo mkfs.ext4 /dev/nvme0n1p4            # home
+sudo swapon /dev/nvme0n1p3
+
+# Montage des partitions
+sudo mount /dev/nvme0n1p2 /mnt                    # root
+sudo mkdir /mnt/boot                              # EFI
+sudo mount /dev/nvme0n1p1 /mnt/boot
+sudo mkdir /mnt/home                              # home
+sudo mount /dev/nvme0n1p4 /mnt/home
+
+# Installation des paquets de base
+# intel-ucore -> correctif pour le processeur par intel
+# iwd -> Permet la gestion du Wi-Fi
+# dhcpcd -> Permet d’obtenir une adresse IP automatiquement (via DHCP)
+
+# On installe des paquets de base
+## libinput -> touchpad config
+pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput
+
+# Activer TLP
+systemctl enable tlp
+systemctl enable tlp-sleep
+
+# Générer le fstab
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Entrer dans le chroot
+arch-chroot /mnt
+
+# Empêcher les users non-root de lire le kernel
+chmod 700 /boot
+
+# Créer un utilisateur
+useradd -m -G wheel <ton_nom>
+passwd <ton_nom>
+
+# Créer un mot de passe pour root
+passwd
+
+# Activer neovim partout
+EDITOR=nvim visudo
+
+# Dans le visudo ajouter notre utilisateur
+<ton_nom>   ALL=(ALL:ALL) ALL
+
+# Sécuriser sudo
+Defaults timestamp_timeout=5      # expire sudo après 5 minutes
+Defaults passwd_timeout=1         # limite le délai pour taper le mot de passe
+
+# Fuseau horaire
+ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+hwclock --systohc
+
+# Locale
+nano /etc/locale.gen   ← décommente `en_US.UTF-8 UTF-8`
+locale-gen
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+
+# Configure le clavier dans la console texte TTY (pas dans X11 ou Wayland)
+echo "KEYMAP=fr" > /etc/vconsole.conf
+
+# Activer iwd & dhcpcd
+systemctl enable iwd
+systemctl enable dhcpcd
+
+# Se connecter au wifi
+iwctl
+
+# Dans l'invite de commande iwctl
+device list -> Noter le nom de mon interface(wlp59s0 normalement)
+station <nom_interface> scan
+station <nom_interface> get-networks
+station <nom_interface> connect NOM_RESEAU -> Tab fonctionne
+station <nom_interface> show
+exit
+ping archlinux.org
+
+
+# Installation du booloader (systemd-boot car plus moderne et léger)
+bootctl install
+
+# Création du fichier de configuration globale de systemd-boot
+touch /boot/loader/entries/arch.conf
+
+# Trouver le PARTUUID de / et le UUID du swap
+blkid -> Au vu du partionnement que j'ai fait, ce devrait être pour /dev/nvme0n1p2
+lsblk -f | grep swap
+
+# Mettre dans /boot/loader/entries/arch.conf
+title   Arch Linux Hardened
+linux   /vmlinuz-linux-hardened
+initrd  /intel-ucode.img
+initrd  /initramfs-linux-hardened.img
+options root=PARTUUID=XXXX rw quiet resume=UUID=XXXX i915.enable_psr=1 i915.enable_fbc=1 i915.enable_guc=2 # Ne pas oublier le rw apres le PARTUUID
+
+# Dans /etc/mkinitcpio.conf
+HOOKS=(base udev autodetect modconf block filesystems resume keyboard fsck)
+
+# Regénérer initramfs
+mkinitcpio -P
+
+# Création du fichier de configuration pour le démarrage de Arch
+touch /boot/loader/loader.conf
+
+# Mettre dans /boot/loader/loader.conf
+default arch
+timeout 3
+editor no
+console-mode max
+
+# On sort du arch-chroot
+exit
+unmount -R /mnt
+reboot
+
+# Après le premier reboot tester suspend/hibernate du power management
+## Le PC doit s’endormir (ventilo coupé, écran noir, LED power clignote), puis se réveiller correctement à la pression d’une touche
+sudo systemctl suspend
+
+##
+sudo systemctl hibernate
+
+# Package a installer
+sudo pacman -S --needed bat eza fd ripgrep fzf pipewire pipewire-audio pipewire-alsa pipewire-pulse wireplumber ttf-jetbrains-mono-nerd kitty zsh git base-devel starship curl wget unzip
+
+# Installation de paru, un AUR helper
+mkdir -p ~/Downloads/paru
+cd ~/Downloads/paru
+git clone https://aur.archlinux.org/paru.git
+makepkg -si
+
+# Installer Wayland & Hyprland
+pacman -S hyprland wl-clipboard xdg-desktop-portal-hyprland xdg-desktop-portal wayland-protocols
+
+# Configurer le touchpad, coller dans ~/.config/hypr/hyprland.conf
+input {
+  kb_layout = fr
+  follow_mouse = 1
+
+  touchpad {
+    natural_scroll = true         # défilement naturel (comme sur un smartphone)
+    tap-to-click = true           # clic en tapant
+    clickfinger_behavior = true   # clic droit = deux doigts, clic milieu = trois doigts
+    scroll_factor = 1.0           # vitesse du scroll
+    disable_while_typing = true  # désactive pendant la frappe (évite les mouvements involontaires)
+  }
+}
+
+# Installation de la barre personalisable
+pacman -Sy eww-wayland
+
+# Utiliser la font dans la barre
+## Vérifier que la font est bien installer
+fc-cache -fv -> Mise à jour du cache police
+fc-list | grep "JetBrainsMono Nerd Font Mono"
+
+## Modifier dans ~/.config/eww/style.css ou ~/.config/eww/<nom_du_theme>/style.css
+* {
+  font-family: "JetBrainsMono Nerd Font Mono";
+  font-size: 12px;
+}
+
+# Reload hyprland et eww
+hyprctl reload && eww reload
+
+# Activer les services audio
+systemctl --user enable --now pipewire pipewire-pulse wireplumber
+
+# Installer dnscrypt-proxy mais PAS SYSTEMD-RESOLVED!!!
+
+# Installer LazyGit
+
+# Installer bun
+curl -fsSL https://bun.sh/install | bash
+
+# Faire les liens via le dotfile
+
+# https://wiki.archlinux.org/title/Sudo
