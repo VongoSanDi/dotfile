@@ -23,8 +23,20 @@ echo "🔗 Liens Zsh..."
 link ~/.dotfile/zsh/.zshrc ~/.zshrc
 link ~/.dotfile/zsh/.zshenv ~/.zshenv
 link ~/.dotfile/zsh/.zcompdump ~/.zcompdump
+link ~/.dotfile/zsh/.zprofile ~/.zprofile
 mkdir -p ~/.config/zsh
 link ~/.dotfile/zsh/plugins ~/.config/zsh/plugins
+
+ # 🚀 Plugins Zsh à récupérer si absents
+echo "📦 Téléchargement des plugins Zsh..."
+
+ZSH_PLUGINS_DIR=~/.dotfile/zsh/plugins
+
+[[ ! -d $ZSH_PLUGINS_DIR/zsh-autosuggestions ]] && \
+  git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_PLUGINS_DIR/zsh-autosuggestions
+
+[[ ! -d $ZSH_PLUGINS_DIR/zsh-syntax-highlighting ]] && \
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting $ZSH_PLUGINS_DIR/zsh-syntax-highlighting
 echo "✔️ Zsh OK"
 
 # ──────────────────────────────────────────────
