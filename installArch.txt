@@ -59,8 +59,14 @@ sudo mount /dev/nvme0n1p4 /mnt/home
 # dhcpcd -> Permet d’obtenir une adresse IP automatiquement (via DHCP)
 
 # On installe des paquets de base
-## libinput -> touchpad config
-pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput
+## libinput → gestion du touchpad/clavier
+## tlp, acpi, acpi_call → optimisation de la consommation d'énergie
+## noto-fonts noto-fonts-emoji -> Police pour les navigateur web
+## noto-fonts-cjk -> Police pour caractères international
+## mesa -> accélération matérielle (OpenGL/Vulkan)
+## intel-media-driver -> accélération matérielle spécifique pour la vidéo (décodage/encodage)
+## vulkan-intel -> Support de Vulkan (utile pour certaines applications modernes)
+pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput vivaldi mesa intel-media-driver vulkan-intel noto-fonts noto-fonts-emoji noto-fonts-cjk
 
 # Activer TLP
 systemctl enable tlp
@@ -76,7 +82,7 @@ arch-chroot /mnt
 chmod 700 /boot
 
 # Créer un utilisateur
-useradd -m -G wheel <ton_nom>
+useradd -m -G wheel -s /bin/zsh <ton_nom>
 passwd <ton_nom>
 
 # Créer un mot de passe pour root
@@ -109,6 +115,9 @@ systemctl enable iwd
 systemctl enable dhcpcd
 
 # Se connecter au wifi
+## Si jamais l'interface est off
+rfkill unblock wifi
+
 iwctl
 
 # Dans l'invite de commande iwctl
@@ -213,11 +222,19 @@ systemctl --user enable --now pipewire pipewire-pulse wireplumber
 
 # Installer dnscrypt-proxy mais PAS SYSTEMD-RESOLVED!!!
 
+# Installer un firewall (nftables)
+
 # Installer LazyGit
 
 # Installer bun
 curl -fsSL https://bun.sh/install | bash
 
 # Faire les liens via le dotfile
+
+# Utiliser eww pour l'affichage des notifications
+
+# Installer wofi pour pour le menu d'application
+
+# Installer grim + slurp pour faire des screenshot
 
 # https://wiki.archlinux.org/title/Sudo
