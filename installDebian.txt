@@ -119,3 +119,14 @@ zsh ~/.dotfile/install.sh
 
 # After installing dnscrypt-proxy launch the install.zsh from .dotfile to cp config files
 zsh ~/.dotfile/dnscrypt-proxy/install.sh
+
+# Variables d'environnement
+mkdir -p ~/.config/environment.d
+nvim ~/.config/environment.d/wayland.conf
+#  Ajouter ces lignes dans le fichier:
+MOZ_ENABLE_WAYLAND=1
+XDG_SESSION_TYPE=wayland
+QT_QPA_PLATFORM=wayland
+GDK_BACKEND=wayland
+CLUTTER_BACKEND=wayland
+SDL_VIDEODRIVER=wayland
