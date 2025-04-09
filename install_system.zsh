@@ -1,12 +1,23 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-# Mode dry-run
+# Flags
 DRY_RUN=false
-if [[ "${1:-}" == "--dry-run" ]]; then
-  DRY_RUN=true
-  echo "🔍 Mode dry-run activé : aucune modification ne sera faite"
-fi
+REBOOT=true
+
+# Gestion des arguments
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run)
+      DRY_RUN=true
+      echo "🔍 Mode dry-run activé : aucune modification ne sera faite"
+      ;;
+    --no-reboot)
+      REBOOT=false
+      echo "🔕 Redémarrage automatique désactivé"
+      ;;
+  esac
+done
 
 # Détection distribution
 if [[ -f /etc/os-release ]]; then
@@ -21,6 +32,7 @@ fi
 typeset -a PACKAGE_LIST_COMMON
 typeset -a PACKAGE_LIST_DEBIAN
 typeset -a PACKAGE_LIST_ARCH
+
 PACKAGE_LIST_COMMON=(eza bat fd curl wget)
 PACKAGE_LIST_DEBIAN=()
 PACKAGE_LIST_ARCH=(
@@ -33,7 +45,6 @@ PACKAGE_LIST_ARCH=(
   vim-spell-en
   bluez
   tlp
-  powertop
   man-db
   man-pages
   mesa
@@ -48,7 +59,6 @@ PACKAGE_LIST_ARCH=(
 # Fonction d'installation
 install_package() {
   local pkg="$1"
-
   if pacman -Si "$pkg" &>/dev/null; then
     echo "📦 $pkg trouvé dans pacman"
     if [[ "$DRY_RUN" == false ]]; then
@@ -92,65 +102,73 @@ else
   fi
 fi
 
-  # Combinaison des paquets communs et spécifiques à Arch
-  packages_to_install=("${PACKAGE_LIST_COMMON[@]}" "${PACKAGE_LIST_ARCH[@]}")
+# Combinaison des paquets communs et spécifiques à Arch
+packages_to_install=("${PACKAGE_LIST_COMMON[@]}" "${PACKAGE_LIST_ARCH[@]}")
 
-  # Installation des paquets
-  for package in "${packages_to_install[@]}"; do
-    install_package "$package"
-  done
+# Installation des paquets
+for package in "${packages_to_install[@]}"; do
+  install_package "$package"
+done
 
-  # Mise à jour des polices
+# Mise à jour des polices
+if [[ "$DRY_RUN" == false ]]; then
+  fc-cache -fv
+else
+  echo "🔍 [dry-run] fc-cache -fv"
+fi
+
+# Optimisation de la batterie avec TLP
+if [[ "$DRY_RUN" == false ]]; then
+  echo "⚙️ Activation de TLP"
+  sudo systemctl enable --now tlp
+else
+  echo "🔍 [dry-run] sudo systemctl enable --now tlp"
+fi
+
+# Activation des services audio
+if [[ "$DRY_RUN" == false ]]; then
+  echo "⚙️ Activation de l'audio"
+  systemctl --user enable --now pipewire wireplumber
+else
+  echo "🔍 [dry-run] systemctl --user enable --now pipewire wireplumber"
+fi
+
+# Activation du service Bluetooth
+if [[ "$DRY_RUN" == false ]]; then
+  echo "⚙️ Activation du bluetooth"
+  sudo systemctl enable --now bluetooth.service
+else
+  echo "🔍 [dry-run] sudo systemctl enable --now bluetooth.service"
+fi
+
+# Installation de bun
+if [[ "$DRY_RUN" == false ]]; then
+  echo "⚙️ Installation de bun"
+  curl -fsSL https://bun.sh/install | bash
+else
+  echo "🔍 [dry-run] curl -fsSL https://bun.sh/install | bash"
+fi
+
+# Appel du script install_dotfile si présent
+if [[ -x "$HOME/.dotfile/install_dotfile.zsh" ]]; then
   if [[ "$DRY_RUN" == false ]]; then
-    fc-cache -fv
+    "$HOME/.dotfile/install_dotfile.zsh" "$@"
   else
-    echo "🔍 [dry-run] fc-cache -fv"
-  fi
-
-  # Optimisation de la batterie avec TLP
-  if [[ "$DRY_RUN" == false ]]; then
-    echo "⚙️ Activation de TLP"
-    sudo systemctl enable --now tlp
-  else
-    echo "🔍 [dry-run] sudo systemctl enable --now tlp"
-  fi
-
-  # Outil de diagnostic de consommation : powertop
-  if [[ "$DRY_RUN" == false ]]; then
-    echo "ℹ️ Tu peux exécuter powertop --auto-tune pour optimiser la conso"
-  else
-    echo "🔍 [dry-run] powertop installé (manuel : powertop --auto-tune)"
-  fi
-
-  # Activer les services audio
-  if [[ "$DRY_RUN" == false ]]; then
-    systemctl --user enable --now pipewire wireplumber
-  else
-    echo "🔍 [dry-run] systemctl --user enable --now pipewire wireplumber"
-  fi
-
-  # Activation du service Bluetooth
-  if [[ "$DRY_RUN" == false ]]; then
-    sudo systemctl enable --now bluetooth.service
-  else
-    echo "🔍 [dry-run] sudo systemctl enable --now bluetooth.service"
-  fi
-
-  # Installation de bun
-  if [[ "$DRY_RUN" == false ]]; then
-    curl -fsSL https://bun.sh/install | bash
-  else
-    echo "🔍 [dry-run] curl -fsSL https://bun.sh/install | bash"
-  fi
-
-  # Appel du script install_dotfile si présent
-  if [[ -x "$HOME/.dotfile/install_dotfile.zsh" ]]; then
-    if [[ "$DRY_RUN" == false ]]; then
-      "$HOME/.dotfile/install_dotfile.zsh" "$@"
-    else
-      echo "🔍 [dry-run] $HOME/.dotfile/install_dotfile.zsh $*"
-    fi
+    echo "🔍 [dry-run] $HOME/.dotfile/install_dotfile.zsh $*"
   fi
 fi
 
-echo "✅ Tous les packages de base ont  été installés avec succès."
+echo "✅ Tous les paquets de base ont été installés avec succès."
+
+# Redémarrage à la fin de l'installation (si autorisé)
+if [[ "$REBOOT" == true ]]; then
+  if [[ "$DRY_RUN" == false ]]; then
+    echo "✅ Installation terminée. Redémarrage dans 10 secondes..."
+    sleep 10
+    sudo reboot
+  else
+    echo "🔍 [dry-run] sudo reboot (simulé)"
+  fi
+else
+  echo "🛑 Redémarrage automatique désactivé (--no-reboot)"
+fi
