@@ -54,6 +54,7 @@ PACKAGE_LIST_ARCH=(
   noto-fonts-emoji
   noto-fonts-cjk
   unzip
+  brightnessctl
 )
 
 # Fonction d'installation
