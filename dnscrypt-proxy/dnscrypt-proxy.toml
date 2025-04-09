@@ -30,7 +30,13 @@
 ## Remove the leading # first to enable this; lines starting with # are ignored.
 
 # server_names = ['scaleway-fr', 'google', 'yandex', 'cloudflare']
-server_names = ['quad9-dnscrypt-ip4-filter-pri', 'quad9-dnscrypt-ip6-filter-pri']
+server_names = [
+  'mullvad-adblock-doh',
+  'dns0.eu-ns1-doh',
+  'ffmuc-adblock-doh',
+  'quad9-dnscrypt-ip4-filter-pri',
+  'quad9-dnscrypt-ip6-filter-pri'
+]
 
 ## List of local addresses and ports to listen to. Can be IPv4 and/or IPv6.
 ## Example with both IPv4 and IPv6:
@@ -79,7 +85,7 @@ require_dnssec = false
 require_nolog = true
 
 # Server must not enforce its own blocklist (for parental control, ads blocking...)
-require_nofilter = true
+require_nofilter = false
 
 # Server names to avoid even if they match all criteria
 disabled_server_names = []
@@ -148,7 +154,7 @@ keepalive = 30
 ## Randomly choose 1 of the fastest 2, half, n, 1 or all live servers by latency.
 ## The response quality still depends on the server itself.
 
-# lb_strategy = 'p2'
+lb_strategy = 'ph'
 
 ## Set to `true` to constantly try to estimate the latency of all the resolvers
 ## and adjust the load-balancing parameters accordingly, or to `false` to disable.
