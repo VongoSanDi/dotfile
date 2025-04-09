@@ -31,11 +31,6 @@ install_if_missing() {
   fi
 }
 
-# Installation de starship
-install_starship() {
-  install_if_missing starship
-}
-
 # Copie du fichier de configuration
 copy_config() {
   if [[ ! -f "$CONFIG_DIR/starship.toml" ]]; then
@@ -58,7 +53,7 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_starship
+  install_if_missing starship
   copy_config
 fi
 
