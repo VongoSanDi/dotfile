@@ -26,7 +26,7 @@ DEST_ZSH_CONFIG_DIR="$HOME/.config/zsh"
 link() {
   local src="$1"
   local dest="$2"
-  echo "🔗 $dest → $src"
+  echo "🔗 $src → $dest"
   if $DRY_RUN; then
     echo "   ↪ rm -rf $dest"
     echo "   ↪ ln -s $src $dest"
@@ -52,8 +52,8 @@ setup_links() {
 install_plugins() {
   echo "📦 Téléchargement des plugins Zsh..."
 
-  local autosuggestions_repo="https://github.com/zsh-users/zsh-autosuggestions"
-  local syntax_highlighting_repo="https://github.com/zsh-users/zsh-syntax-highlighting"
+  local autosuggestions_repo="https://github.com/zsh-users/zsh-autosuggestions.git"
+  local syntax_highlighting_repo="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
   if [[ ! -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ]]; then
     echo "⬇️  Clonage zsh-autosuggestions..."
@@ -77,6 +77,20 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
 else
   setup_links
   install_plugins
+fi
+
+if [[ $SHELL != *zsh ]]; then
+  echo "🔁 Changement de shell vers Zsh..."
+  if chsh -s "$(which zsh)" 2>/dev/null; then
+    echo "✅ Shell changé avec succès sans sudo."
+  elif sudo -v && sudo chsh -s "$(which zsh)"; then
+    echo "✅ Shell changé avec succès avec sudo."
+  else
+    echo "❌ Échec du changement de shell. Essaie manuellement : chsh -s $(which zsh)"
+  fi
+  echo "ℹ️  Redémarre ta session ou ton terminal pour que Zsh soit actif."
+else
+  echo "✅ Zsh est déjà ton shell par défaut."
 fi
 
 # Terminé !

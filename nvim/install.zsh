@@ -33,6 +33,7 @@ install_if_missing() {
 
 # Installation de Neovim et outils
 install_packages() {
+  install_if_missing base-devel
   install_if_missing neovim
   install_if_missing lazygit
   install_if_missing ripgrep
