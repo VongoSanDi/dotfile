@@ -498,7 +498,7 @@ cache_neg_max_ttl = 600
 
 
 ## Query log format (currently supported: tsv and ltsv)
-
+file = '/var/log/dnscrypt-query.log'
 format = 'tsv'
 
 
