@@ -66,11 +66,10 @@ sudo mount /dev/nvme0n1p4 /mnt/home
 ## mesa -> accélération matérielle (OpenGL/Vulkan)
 ## intel-media-driver -> accélération matérielle spécifique pour la vidéo (décodage/encodage)
 ## vulkan-intel -> Support de Vulkan (utile pour certaines applications modernes)
-pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput vivaldi mesa intel-media-driver vulkan-intel noto-fonts noto-fonts-emoji noto-fonts-cjk
+pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput mesa intel-media-driver vulkan-intel noto-fonts noto-fonts-emoji noto-fonts-cjk
 
 # Activer TLP
 systemctl enable tlp
-systemctl enable tlp-sleep
 
 # Générer le fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -103,7 +102,7 @@ ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 hwclock --systohc
 
 # Locale
-nano /etc/locale.gen   ← décommente `en_US.UTF-8 UTF-8`
+nvim /etc/locale.gen   ← décommente `en_US.UTF-8 UTF-8`
 locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 
@@ -145,10 +144,10 @@ title   Arch Linux Hardened
 linux   /vmlinuz-linux-hardened
 initrd  /intel-ucode.img
 initrd  /initramfs-linux-hardened.img
-options root=PARTUUID=XXXX rw quiet resume=UUID=XXXX i915.enable_psr=1 i915.enable_fbc=1 i915.enable_guc=2 # Ne pas oublier le rw apres le PARTUUID
+options root=PARTUUID=XXXX rw i915.enable_psr=1 i915.enable_fbc=1 i915.enable_guc=2 # Ne pas oublier le rw apres le PARTUUID, il faut ajouter le quiet et resume si on est pas en hardened
 
 # Dans /etc/mkinitcpio.conf
-HOOKS=(base udev autodetect modconf block filesystems resume keyboard fsck)
+HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block resume filesystems fsck)
 
 # Regénérer initramfs
 mkinitcpio -P
@@ -171,11 +170,11 @@ reboot
 ## Le PC doit s’endormir (ventilo coupé, écran noir, LED power clignote), puis se réveiller correctement à la pression d’une touche
 sudo systemctl suspend
 
-##
+## Ne marche pas avec linux-hardened
 sudo systemctl hibernate
 
 # Package a installer
-sudo pacman -S --needed bat eza fd ripgrep fzf pipewire pipewire-audio pipewire-alsa pipewire-pulse wireplumber ttf-jetbrains-mono-nerd kitty zsh git base-devel starship curl wget unzip
+sudo pacman -S --needed bat eza fd pipewire pipewire-audio pipewire-alsa wireplumber ttf-jetbrains-mono-nerd kitty zsh git base-devel starship curl wget unzip
 
 # Installation de paru, un AUR helper
 mkdir -p ~/Downloads/paru
@@ -184,24 +183,10 @@ git clone https://aur.archlinux.org/paru.git
 makepkg -si
 
 # Installer Wayland & Hyprland
-pacman -S hyprland wl-clipboard xdg-desktop-portal-hyprland xdg-desktop-portal wayland-protocols
-
-# Configurer le touchpad, coller dans ~/.config/hypr/hyprland.conf
-input {
-  kb_layout = fr
-  follow_mouse = 1
-
-  touchpad {
-    natural_scroll = true         # défilement naturel (comme sur un smartphone)
-    tap-to-click = true           # clic en tapant
-    clickfinger_behavior = true   # clic droit = deux doigts, clic milieu = trois doigts
-    scroll_factor = 1.0           # vitesse du scroll
-    disable_while_typing = true  # désactive pendant la frappe (évite les mouvements involontaires)
-  }
-}
+pacman -S hyprland hypridle hyprlock hyprsunset wl-clipboard xdg-desktop-portal-hyprland xdg-desktop-portal wayland-protocols
 
 # Installation de la barre personalisable
-pacman -Sy eww-wayland
+# pacman -Sy eww-wayland
 
 # Utiliser la font dans la barre
 ## Vérifier que la font est bien installer
@@ -218,13 +203,11 @@ fc-list | grep "JetBrainsMono Nerd Font Mono"
 hyprctl reload && eww reload
 
 # Activer les services audio
-systemctl --user enable --now pipewire pipewire-pulse wireplumber
+systemctl --user enable --now pipewire wireplumber
 
 # Installer dnscrypt-proxy mais PAS SYSTEMD-RESOLVED!!!
 
 # Installer un firewall (nftables)
-
-# Installer LazyGit
 
 # Installer bun
 curl -fsSL https://bun.sh/install | bash

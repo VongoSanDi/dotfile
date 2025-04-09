@@ -17,7 +17,7 @@ else
   exit 1
 fi
 
-CONFIG_DIR="$HOME/.dotfile/nvim"
+CONFIG_DIR="$HOME/.dotfile/starship"
 DEST_CONFIG_DIR="$HOME/.config"
 
 # Vérification et installation des dépendances
@@ -31,36 +31,25 @@ install_if_missing() {
   fi
 }
 
-# Installation de Neovim et outils
-install_packages() {
-  install_if_missing neovim
-  install_if_missing lazygit
-  install_if_missing ripgrep
-  install_if_missing fzf
-  install_if_missing fd
-  install_if_missing nodejs
-  install_if_missing npm
+# Installation de starship
+install_starship() {
+  install_if_missing starship
 }
 
-# Copie de la configuration
+# Copie du fichier de configuration
 copy_config() {
-  if [[ ! -d "$CONFIG_DIR" ]]; then
-    echo "❌ Le dossier de config Neovim n'existe pas : $CONFIG_DIR"
+  if [[ ! -f "$CONFIG_DIR/starship.toml" ]]; then
+    echo "❌ Fichier starship.toml introuvable dans $CONFIG_DIR"
     exit 1
   fi
 
-  echo "📂 Suppression de l'ancienne configuration Neovim..."
-  if $DRY_RUN; then
-    echo "   ↪ rm -rf $DEST_CONFIG_DIR/nvim"
-  else
-    rm -rf "$DEST_CONFIG_DIR/nvim"
-  fi
+  mkdir -p "$DEST_CONFIG_DIR"
 
-  echo "🔗 Création du lien symbolique..."
+  echo "🔗 Copie de la configuration starship.toml..."
   if $DRY_RUN; then
-    echo "   ↪ ln -s $CONFIG_DIR $DEST_CONFIG_DIR/nvim"
+    echo "   ↪ cp $CONFIG_DIR/starship.toml $DEST_CONFIG_DIR/"
   else
-    ln -s "$CONFIG_DIR" "$DEST_CONFIG_DIR/nvim"
+    cp "$CONFIG_DIR/starship.toml" "$DEST_CONFIG_DIR/"
   fi
 }
 
@@ -69,9 +58,9 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_packages
+  install_starship
   copy_config
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de Neovim terminées."
+echo "✅ Installation et configuration de starship terminées."

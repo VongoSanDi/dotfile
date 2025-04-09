@@ -17,8 +17,8 @@ else
   exit 1
 fi
 
-CONFIG_DIR="$HOME/.dotfile/nvim"
-DEST_CONFIG_DIR="$HOME/.config"
+CONFIG_DIR="$HOME/.dotfile/kitty"
+DEST_CONFIG_DIR="$HOME/.config/kitty"
 
 # Vérification et installation des dépendances
 install_if_missing() {
@@ -31,37 +31,44 @@ install_if_missing() {
   fi
 }
 
-# Installation de Neovim et outils
-install_packages() {
-  install_if_missing neovim
-  install_if_missing lazygit
-  install_if_missing ripgrep
-  install_if_missing fzf
-  install_if_missing fd
-  install_if_missing nodejs
-  install_if_missing npm
+# Installation de kitty
+install_kitty() {
+  install_if_missing kitty
 }
 
 # Copie de la configuration
 copy_config() {
-  if [[ ! -d "$CONFIG_DIR" ]]; then
-    echo "❌ Le dossier de config Neovim n'existe pas : $CONFIG_DIR"
+  if [[ ! -f "$CONFIG_DIR/kitty.conf" ]]; then
+    echo "❌ Fichier kitty.conf introuvable dans $CONFIG_DIR"
     exit 1
   fi
 
-  echo "📂 Suppression de l'ancienne configuration Neovim..."
+  echo "📂 Suppression de l'ancienne configuration kitty..."
   if $DRY_RUN; then
-    echo "   ↪ rm -rf $DEST_CONFIG_DIR/nvim"
+    echo "   ↪ rm -rf $DEST_CONFIG_DIR"
   else
-    rm -rf "$DEST_CONFIG_DIR/nvim"
+    rm -rf "$DEST_CONFIG_DIR"
   fi
 
-  echo "🔗 Création du lien symbolique..."
+  echo "📁 Création du dossier de destination..."
   if $DRY_RUN; then
-    echo "   ↪ ln -s $CONFIG_DIR $DEST_CONFIG_DIR/nvim"
+    echo "   ↪ mkdir -p $DEST_CONFIG_DIR"
   else
-    ln -s "$CONFIG_DIR" "$DEST_CONFIG_DIR/nvim"
+    mkdir -p "$DEST_CONFIG_DIR"
   fi
+
+  echo "🔗 Copie des fichiers de configuration..."
+  for file in kitty.conf current-theme.conf; do
+    if [[ -f "$CONFIG_DIR/$file" ]]; then
+      if $DRY_RUN; then
+        echo "   ↪ cp $CONFIG_DIR/$file $DEST_CONFIG_DIR/"
+      else
+        cp "$CONFIG_DIR/$file" "$DEST_CONFIG_DIR/"
+      fi
+    else
+      echo "⚠️  Fichier manquant : $file"
+    fi
+  done
 }
 
 # Exécution principale
@@ -69,9 +76,9 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_packages
+  install_kitty
   copy_config
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de Neovim terminées."
+echo "✅ Installation et configuration de kitty terminées."
