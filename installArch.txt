@@ -182,9 +182,6 @@ cd ~/Downloads/paru
 git clone https://aur.archlinux.org/paru.git
 makepkg -si
 
-# Installer Wayland & Hyprland
-pacman -S hyprland hypridle hyprlock hyprsunset wl-clipboard xdg-desktop-portal-hyprland xdg-desktop-portal wayland-protocols
-
 # Installation de la barre personalisable
 # pacman -Sy eww-wayland
 
@@ -205,7 +202,8 @@ hyprctl reload && eww reload
 # Activer les services audio
 systemctl --user enable --now pipewire wireplumber
 
-# Installer dnscrypt-proxy mais PAS SYSTEMD-RESOLVED!!!
+# Installer bluetooth
+sudo pacman bluez bluetoothctl
 
 # Installer un firewall (nftables)
 
