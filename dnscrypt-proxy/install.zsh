@@ -34,12 +34,11 @@ install_if_missing() {
 # Sauvegarde et copie des fichiers de config
 copy_config() {
   echo "📦 Sauvegarde des fichiers de config existants..."
-  for f in /etc/resolv.conf /etc/dhcpcd.conf "$DEST_DIR/dnscrypt-proxy.toml" "$DEST_DIR/blocked-names.txt"; do
-    if [[ -f "$f" ]]; then
-      echo "  ↪ $f → $f.bak"
-      $DRY_RUN || sudo cp "$f" "$f.bak"
-    fi
-  done
+
+  if [[ -f /etc/resolv.conf ]]; then
+    echo "  ↪ /etc/resolv.conf → /etc/resolv.conf.bak"
+    $DRY_RUN || sudo cp /etc/resolv.conf /etc/resolv.conf.bak
+  fi
 
   echo "🧹 Nettoyage de l'ancienne configuration dnscrypt-proxy..."
   $DRY_RUN || sudo rm -f "$DEST_DIR/dnscrypt-proxy.toml" "$DEST_DIR/blocked-names.txt"
@@ -51,23 +50,21 @@ copy_config() {
   $DRY_RUN || sudo cp "$CONFIG_DIR/blocked-names.txt" "$DEST_DIR/"
   $DRY_RUN || sudo chmod 644 "$DEST_DIR/blocked-names.txt"
 
+}
+
+creation_fichier_logs() {
   echo "📝 Création du fichier de log /var/log/dnscrypt-query.log..."
   $DRY_RUN || {
     sudo touch /var/log/dnscrypt-query.log
-    sudo chown dnscrypt-proxy:dnscrypt-proxy /var/log/dnscrypt-query.log
-    sudo chmod 644 /var/log/dnscrypt-query.log
-  }
+      sudo chown dnscrypt-proxy:dnscrypt-proxy /var/log/dnscrypt-query.log
+      sudo chmod 644 /var/log/dnscrypt-query.log
+    }
 }
 
 # Configuration spécifique Arch
 configure_arch() {
   install_if_missing dnscrypt-proxy
   copy_config
-
-  echo "🛡️ Désactivation de la modification de resolv.conf par dhcpcd..."
-  if ! grep -q 'nohook resolv.conf' /etc/dhcpcd.conf; then
-    echo 'nohook resolv.conf' | sudo tee -a /etc/dhcpcd.conf > /dev/null
-  fi
 
   echo "🧹 Mise à jour de /etc/resolv.conf..."
   $DRY_RUN || sudo chattr -i /etc/resolv.conf 2>/dev/null || true
@@ -93,6 +90,12 @@ fi
 # Activation du service
 echo "🚀 Activation et démarrage du service dnscrypt-proxy..."
 $DRY_RUN || sudo systemctl enable --now dnscrypt-proxy.service
+
+# Attente fixe pour laisser le temps au service de démarrer
+echo "⏳ Pause de 10 secondes pour laisser dnscrypt-proxy démarrer..."
+sleep 10
+
+creation_fichier_logs
 
 # Test de fonctionnement avec dig
 echo "🧪 Test de résolution DNS via dnscrypt-proxy..."
