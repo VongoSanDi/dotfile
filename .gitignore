@@ -2,6 +2,7 @@
 *.bak
 .DS_Store
 /nvim.bak/
+/nvim/*.lock
 zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory
