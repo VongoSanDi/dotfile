@@ -31,42 +31,35 @@ install_if_missing() {
   fi
 }
 
-# Installation de kitty
-install_kitty() {
-  install_if_missing kitty
-}
-
-# Copie de la configuration
 copy_config() {
-  if [[ ! -f "$CONFIG_DIR/kitty.conf" ]]; then
-    echo "❌ Fichier kitty.conf introuvable dans $CONFIG_DIR"
+  echo "📂 Configuration de kitty → symlinks depuis $CONFIG_DIR"
+
+  if [[ ! -d "$CONFIG_DIR" ]]; then
+    echo "❌ Dossier $CONFIG_DIR introuvable"
     exit 1
   fi
 
-  echo "📂 Suppression de l'ancienne configuration kitty..."
   if $DRY_RUN; then
     echo "   ↪ rm -rf $DEST_CONFIG_DIR"
-  else
-    rm -rf "$DEST_CONFIG_DIR"
-  fi
-
-  echo "📁 Création du dossier de destination..."
-  if $DRY_RUN; then
     echo "   ↪ mkdir -p $DEST_CONFIG_DIR"
   else
+    rm -rf "$DEST_CONFIG_DIR"
     mkdir -p "$DEST_CONFIG_DIR"
   fi
 
-  echo "🔗 Copie des fichiers de configuration..."
-  for file in kitty.conf current-theme.conf; do
-    if [[ -f "$CONFIG_DIR/$file" ]]; then
-      if $DRY_RUN; then
-        echo "   ↪ cp $CONFIG_DIR/$file $DEST_CONFIG_DIR/"
-      else
-        cp "$CONFIG_DIR/$file" "$DEST_CONFIG_DIR/"
-      fi
+  for file in "$CONFIG_DIR"/*; do
+    filename=$(basename "$file")
+
+    # Skip install.zsh
+    if [[ "$filename" == "install.zsh" ]]; then
+      echo "⚠️  Ignoré : $filename"
+      continue
+    fi
+
+    if $DRY_RUN; then
+      echo "   ↪ ln -s $file $DEST_CONFIG_DIR/$filename"
     else
-      echo "⚠️  Fichier manquant : $file"
+      ln -sf "$file" "$DEST_CONFIG_DIR/$filename"
     fi
   done
 }
@@ -76,7 +69,7 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_kitty
+  install_if_missing kitty
   copy_config
 fi
 
