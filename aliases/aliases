@@ -2,8 +2,8 @@
 # | System |
 # +--------+
 
-alias shutdown='sudo shutdown now'
-alias restart='sudo reboot'
+alias shutdown='systemctl poweroff'
+alias restart='systemctl reboot'
 alias suspend='sudo pm-suspend'
 alias update='sudo apt update && sudo apt full-upgrade'
 alias clean="sudo apt autoremove && sudo apt purge && sudo apt autoclean"
@@ -16,7 +16,11 @@ alias bigf='find / -xdev -type f -size +500M' # display "big" files > 500M
 
 TREE_IGNORE="cache|log|logs|node_modules|vendor"
 
-alias ls='eza --all --long --group --group-directories-first --icons --header --time-style long-iso'
+# alias ls='eza --all --long --group --group-directories-first --icons --header --time-style long-iso'
+alias l='eza -lh --icons=auto'
+alias ll='eza -lha --icons=auto --sort=name --group-directories-first'
+alias ld='eza -lhD --icons=auto'
+alias lt='eza --icons=auto --tree'
 
 # +------+
 # | wget |

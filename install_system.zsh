@@ -44,6 +44,7 @@ PACKAGE_LIST_ARCH=(
   vim-spell-fr
   vim-spell-en
   bluez
+  bluez-utils
   tlp
   man-db
   man-pages
