@@ -1,9 +1,38 @@
 #!/usr/bin/env zsh
 set -euo pipefail
 
-# Flags
+# ────────────────────────────────
+# 📁 Création lien environment.d
+# ────────────────────────────────
+link_environment_dir() {
+  local SRC="$HOME/.dotfile/environment.d"
+  local DEST="$HOME/.config/environment.d"
+
+  echo "🔗 Lien symbolique pour environment.d → $DEST"
+
+  if [[ -d "$DEST" || -L "$DEST" ]]; then
+    echo "📦 Suppression de l'ancien $DEST"
+    $DRY_RUN || rm -rf "$DEST"
+  fi
+
+  if [[ -d "$SRC" ]]; then
+    if $DRY_RUN; then
+      echo "🔍 [dry-run] ln -s $SRC $DEST"
+    else
+      ln -s "$SRC" "$DEST"
+    fi
+  else
+    echo "❌ Le dossier source $SRC n'existe pas."
+  fi
+}
+
+# ────────────────────────────────
+# ⚙️ Flags & dry-run
+# ────────────────────────────────
 DRY_RUN=false
 REBOOT=true
+
+link_environment_dir
 
 # Gestion des arguments
 for arg in "$@"; do
@@ -77,6 +106,7 @@ install_package() {
     fi
   fi
 }
+
 
 # Exécution principale
 if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
