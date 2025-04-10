@@ -33,18 +33,23 @@ install_if_missing() {
 
 # Copie du fichier de configuration
 copy_config() {
-  if [[ ! -f "$CONFIG_DIR/starship.toml" ]]; then
-    echo "❌ Fichier starship.toml introuvable dans $CONFIG_DIR"
+  local SOURCE_FILE="$CONFIG_DIR/starship.toml"
+  local TARGET_FILE="$DEST_CONFIG_DIR/starship.toml"
+
+  if [[ ! -f "$SOURCE_FILE" ]]; then
+    echo "❌ Fichier introuvable : $SOURCE_FILE"
     exit 1
   fi
 
-  mkdir -p "$DEST_CONFIG_DIR"
+  echo "🔗 Lien symbolique : starship.toml → $DEST_CONFIG_DIR"
 
-  echo "🔗 Copie de la configuration starship.toml..."
   if $DRY_RUN; then
-    echo "   ↪ cp $CONFIG_DIR/starship.toml $DEST_CONFIG_DIR/"
+    echo "   ↪ mkdir -p $DEST_CONFIG_DIR"
+    echo "   ↪ ln -s $SOURCE_FILE $TARGET_FILE"
   else
-    cp "$CONFIG_DIR/starship.toml" "$DEST_CONFIG_DIR/"
+    mkdir -p "$DEST_CONFIG_DIR"
+    rm -f "$TARGET_FILE"
+    ln -s "$SOURCE_FILE" "$TARGET_FILE"
   fi
 }
 
