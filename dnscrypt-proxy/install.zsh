@@ -52,15 +52,6 @@ copy_config() {
 
 }
 
-creation_fichier_logs() {
-  echo "📝 Création du fichier de log /var/log/dnscrypt-query.log..."
-  $DRY_RUN || {
-    sudo touch /var/log/dnscrypt-query.log
-      sudo chown dnscrypt-proxy:dnscrypt-proxy /var/log/dnscrypt-query.log
-      sudo chmod 644 /var/log/dnscrypt-query.log
-    }
-}
-
 # Configuration spécifique Arch
 configure_arch() {
   install_if_missing dnscrypt-proxy
@@ -94,8 +85,6 @@ $DRY_RUN || sudo systemctl enable --now dnscrypt-proxy.service
 # Attente fixe pour laisser le temps au service de démarrer
 echo "⏳ Pause de 10 secondes pour laisser dnscrypt-proxy démarrer..."
 sleep 10
-
-creation_fichier_logs
 
 # Test de fonctionnement avec dig
 echo "🧪 Test de résolution DNS via dnscrypt-proxy..."
