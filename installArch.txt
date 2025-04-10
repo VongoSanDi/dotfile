@@ -3,7 +3,7 @@ loadkeys fr
 
 # Partitionnement
 # If the disk from which you want to boot already has an EFI system partition, do not create another one, but use the existing partition instead.
-fdisk -l -> Trouver le bon disque (pour nvme c'est généralement nvme0n1)
+fdisk -l -> Trouver le bon disque (pour nvme c'est généralement nvme0n1 pour le dell)
 sudo fdisk /dev/nvme0n1
 
 g                   ← créer une nouvelle table GPT
@@ -56,17 +56,8 @@ sudo mount /dev/nvme0n1p4 /mnt/home
 # Installation des paquets de base
 # intel-ucore -> correctif pour le processeur par intel
 # iwd -> Permet la gestion du Wi-Fi
-# dhcpcd -> Permet d’obtenir une adresse IP automatiquement (via DHCP)
-
-# On installe des paquets de base
 ## libinput → gestion du touchpad/clavier
-## tlp, acpi, acpi_call → optimisation de la consommation d'énergie
-## noto-fonts noto-fonts-emoji -> Police pour les navigateur web
-## noto-fonts-cjk -> Police pour caractères international
-## mesa -> accélération matérielle (OpenGL/Vulkan)
-## intel-media-driver -> accélération matérielle spécifique pour la vidéo (décodage/encodage)
-## vulkan-intel -> Support de Vulkan (utile pour certaines applications modernes)
-pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd dhcpcd man-db man-pages neovim sudo tlp acpi acpi_call libinput mesa intel-media-driver vulkan-intel noto-fonts noto-fonts-emoji noto-fonts-cjk
+pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd neovim sudo
 
 # Activer TLP
 systemctl enable tlp
@@ -165,57 +156,3 @@ console-mode max
 exit
 unmount -R /mnt
 reboot
-
-# Après le premier reboot tester suspend/hibernate du power management
-## Le PC doit s’endormir (ventilo coupé, écran noir, LED power clignote), puis se réveiller correctement à la pression d’une touche
-sudo systemctl suspend
-
-## Ne marche pas avec linux-hardened
-sudo systemctl hibernate
-
-# Package a installer
-sudo pacman -S --needed bat eza fd pipewire pipewire-audio pipewire-alsa wireplumber ttf-jetbrains-mono-nerd curl wget unzip vim-spell-fr vim-spell-en
-
-# Installation de paru, un AUR helper
-mkdir -p ~/Downloads/paru
-cd ~/Downloads/paru
-git clone https://aur.archlinux.org/paru.git
-makepkg -si
-
-# Installation de la barre personalisable
-# pacman -Sy eww-wayland
-
-# Utiliser la font dans la barre
-## Vérifier que la font est bien installer
-fc-cache -fv -> Mise à jour du cache police
-fc-list | grep "JetBrainsMono Nerd Font Mono"
-
-## Modifier dans ~/.config/eww/style.css ou ~/.config/eww/<nom_du_theme>/style.css
-* {
-  font-family: "JetBrainsMono Nerd Font Mono";
-  font-size: 12px;
-}
-
-# Reload hyprland et eww
-hyprctl reload && eww reload
-
-# Activer les services audio
-systemctl --user enable --now pipewire wireplumber
-
-# Installer bluetooth
-sudo pacman bluez bluetoothctl
-
-# Installer un firewall (nftables)
-
-# Installer bun
-curl -fsSL https://bun.sh/install | bash
-
-# Faire les liens via le dotfile
-
-# Utiliser eww pour l'affichage des notifications
-
-# Installer wofi pour pour le menu d'application
-
-# Installer grim + slurp pour faire des screenshot
-
-# https://wiki.archlinux.org/title/Sudo
