@@ -38,12 +38,44 @@ install_if_missing() {
   fi
 }
 
+# Installation du thème hyprcursor rose-pine
+install_rosepine_cursor() {
+  local ICON_DIR="$HOME/.dotfile/hypr/icons"
+  local LOCAL_ICONS_DIR="$HOME/.icons"
+  local THEME_NAME="rose-pine-hyprcursor"
+  local THEME_PATH="$ICON_DIR/$THEME_NAME"
+  local REPO_URL="https://github.com/ndom91/rose-pine-hyprcursor.git"
+
+  echo "🎨 Installation du thème de curseur Hyprland rose-pine pour hyprcursor..."
+
+  if [[ -d "$THEME_PATH" ]]; then
+    echo "✅ Le thème $THEME_NAME est déjà présent dans $ICON_DIR"
+  else
+    echo "📥 Clonage du thème depuis GitHub..."
+    if $DRY_RUN; then
+      echo "   ↪ git clone $REPO_URL $THEME_PATH"
+    else
+      git clone --depth=1 "$REPO_URL" "$THEME_PATH"
+    fi
+  fi
+
+  echo "🔗 Création du lien symbolique vers ~/.icons..."
+  if $DRY_RUN; then
+    echo "   ↪ mkdir -p $LOCAL_ICONS_DIR"
+    echo "   ↪ ln -s $THEME_PATH $LOCAL_ICONS_DIR/$THEME_NAME"
+  else
+    mkdir -p "$LOCAL_ICONS_DIR"
+    ln -sf "$THEME_PATH" "$LOCAL_ICONS_DIR/$THEME_NAME"
+  fi
+}
+
 # Installation de Hyprland et outils
 install_packages() {
   install_if_missing hyprland
   install_if_missing hypridle
   install_if_missing hyprlock
   install_if_missing hyprsunset
+  install_if_missing hyprcursor
   install_if_missing wl-clipboard
   install_if_missing uwsm
   install_if_missing xdg-desktop-portal-hyprland
@@ -94,6 +126,7 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
 else
   install_packages
   copy_config
+  install_rosepine_cursor
 fi
 
 # Terminé !
