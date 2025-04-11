@@ -8,3 +8,4 @@ hide_scroll=true
 print_command=true
 insensitive=true
 prompt=Search
+allow_images=true

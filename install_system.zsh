@@ -85,6 +85,7 @@ PACKAGE_LIST_ARCH=(
   noto-fonts-cjk
   unzip
   brightnessctl
+  papirus-icon-theme
 )
 
 # Fonction d'installation
