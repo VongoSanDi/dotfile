@@ -52,8 +52,16 @@ setup_links() {
 install_plugins() {
   echo "📦 Téléchargement des plugins Zsh..."
 
+  local zsh_you_should_use_repo="https://github.com/MichaelAquilina/zsh-you-should-use.git"
   local autosuggestions_repo="https://github.com/zsh-users/zsh-autosuggestions.git"
   local syntax_highlighting_repo="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+
+    if [[ ! -d "$ZSH_PLUGINS_DIR/zsh-you-should-use" ]]; then
+    echo "⬇️  Clonage zsh-you-should-use..."
+    $DRY_RUN || git clone "$zsh_you_should_use_repo" "$ZSH_PLUGINS_DIR/zsh-you-should-use"
+  else
+    echo "✅ zsh-you-should-use déjà présent"
+  fi
 
   if [[ ! -d "$ZSH_PLUGINS_DIR/zsh-autosuggestions" ]]; then
     echo "⬇️  Clonage zsh-autosuggestions..."
