@@ -27,7 +27,7 @@ install_if_missing() {
     echo "✅ $pkg déjà installé"
   else
     echo "📦 Installation de $pkg..."
-    $DRY_RUN || sudo pacman -S --noconfirm "$pkg"
+    $DRY_RUN || sudo pacman -S "$pkg"
   fi
 }
 
