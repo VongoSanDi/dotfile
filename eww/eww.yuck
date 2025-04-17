@@ -1,0 +1,117 @@
+(deflisten workspaces :initial "[]" "~/.config/eww/scripts/workspace-get.zsh")
+(deflisten current_workspace :initial "1" "~/.config/eww/scripts/workspace-get-active.zsh")
+(defpoll wifi :initial "0" :interval "1m" "./scripts/wifi.zsh")
+(defpoll nombres_updates :interval "1h" "./scripts/updates.zsh")
+
+(defwidget bar []
+  (centerbox :orientation "h"
+    (left-side-stuff)
+    (wifi)
+    (right-side-stuff)))
+
+(defwidget left-side-stuff []
+  (box :class "left-side-stuff" :orientation "h" :space-evenly true :halign "start"
+  (workspaces)
+  (updates)
+  )
+)
+(defwidget right-side-stuff []
+  (box :class "right-side-stuff" :orientation "h" :space-evenly false :halign "end"
+    (metric :label "🔊"
+        :value volume
+        :onchange "amixer -D pulse sset Master {}%")
+    (metric :label ""
+        :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+        :onchange "")
+    (metric :label ""
+        :value {EWW_RAM.used_mem_perc}
+        :onchange "")
+    (metric :label ""
+        :value {EWW_CPU.avg}
+        :onchange "")
+    (metric :label {
+          EWW_BATTERY["BAT0"].status == "Charging" ? "󰂄" :
+          EWW_BATTERY["BAT0"].capacity < 20 ? "󰂃" :
+          EWW_BATTERY["BAT0"].capacity < 40 ? "󰁽" :
+          EWW_BATTERY["BAT0"].capacity < 60 ? "󰁿" :
+          EWW_BATTERY["BAT0"].capacity < 80 ? "󰂁" :
+        "󰁹"
+        }
+        :value {EWW_BATTERY["BAT0"].capacity}
+        :onchange "")
+    time
+  )
+)
+
+(defwidget workspaces []
+  (eventbox :onscroll "~/.config/eww/scripts/workspace-change-active.zsh {} ${current_workspace}" :class "workspaces-widget"
+    (box :space-evenly true
+      (label :text "${workspaces}${current_workspace}" :visible false)
+      (for workspace in workspaces
+        (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
+          (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
+            (label :text "${workspace.id}")
+            )
+          )
+        )
+      )
+    )
+  )
+
+(defwidget updates []
+  (label :text "${nombres_updates == 0 ? '' : '󰚰 ${nombres_updates}' }")
+
+)
+
+(defwidget music []
+  (box :class "music"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+    {music != "" ? "🎵${music}" : ""}))
+
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+(defwidget wifi []
+  (tooltip
+    (label :class "tooltip" :text "${wifi == 0 ? 'Disconnected' : wifi}")
+    (box :class "wifi"
+      :space-evenly false
+      (label
+        :class "icon ${wifi == 0 ? 'disconnected' : 'connected'} " 
+        :text "${wifi == 0 ? '󰖪' : '󰖩 ${wifi}' }")
+    )
+  )
+)
+
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(defpoll volume :interval "1s"
+  "scripts/getvol")
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %d/%m/%Y'")
+
+(defwindow bar
+  :monitor 0
+  :windowtype "dock"
+  :stacking "foreground"
+  :exclusive true
+  :focusable "none"
+  :geometry (geometry :x "0%"
+                      :y "0%"
+                      :width "100%"
+                      :height "5px" ;not used since we use margin in the scss file
+                      :anchor "top center")
+  (bar))

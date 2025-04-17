@@ -1,0 +1,75 @@
+$foreground: #ffffff;
+$grey: #aaaaaa;
+$foreground-alt: #465059;
+$background: #0e1419;
+$black: #000000;
+$red: #ff6565;
+$green: #b8cc52;
+$yellow: #e6c446;
+$blue: #68d4ff;
+$magenta: #ffa3aa;
+$cyan: #36a3d9;
+$white: #ffffff;
+$text: #3c3836;
+
+* {
+  all: unset; // Unsets everything so you can style everything from scratch
+  font-family: "JetBrainsMono Nerd Font", "sans-serif";
+  font-size: 14px;
+  color: $foreground;
+
+}
+
+// Global Styles
+.bar {
+  background-color: $background;
+  padding: 2px 15px;
+}
+
+// Styles on classes (see eww.yuck for more information)
+
+.right-side-stuff slider {
+  all: unset;
+  color: #ffd5cd;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  background-color: #D35D6E;
+  color: #000000;
+  border-radius: 10px;
+}
+
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.workspace-entry {
+
+	&.empty {
+		// color:
+	}
+
+	&.occupied {
+		// color:
+	}
+
+	&.current {
+		// color:
+	}
+
+	&.urgent {
+		// color:
+	}
+}
+
+.wifi {
+  color: $text;
+  font-size: 12px;
+}
