@@ -3,6 +3,8 @@
 .DS_Store
 /nvim.bak/
 /nvim/*.lock
+hypr/icons/
+bat/themes/
 zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory

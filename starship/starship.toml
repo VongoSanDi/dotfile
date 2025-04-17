@@ -5,8 +5,9 @@
 #[package]
 #disabled = true
 
-# Afficher un symbole avant le prompt
+# Enable the blank line at the start of the prompt
 add_newline = true
+
 #format = """$directory$git_branch$git_status$character"""
 format = """
 $username\

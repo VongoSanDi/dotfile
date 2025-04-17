@@ -86,6 +86,8 @@ PACKAGE_LIST_ARCH=(
   unzip
   brightnessctl
   papirus-icon-theme
+  grim
+  slurp
 )
 
 # Fonction d'installation
