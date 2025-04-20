@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 updates_arch=$(pacman -Qu 2>/dev/null | wc -l)
 updates_aur=$(paru -Qua 2>/dev/null | wc -l)

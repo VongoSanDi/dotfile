@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Mode dry-run
@@ -20,14 +20,17 @@ fi
 CONFIG_DIR="$HOME/.dotfile/starship"
 DEST_CONFIG_DIR="$HOME/.config"
 
-# Vérification et installation des dépendances
-install_if_missing() {
-  local pkg=$1
-  if command -v "$pkg" &>/dev/null; then
-    echo "✅ $pkg déjà installé"
+# Vérification et installation de starship
+install_starship_if_missing() {
+  if command -v starship &>/dev/null; then
+    echo "✅ starship déjà installé"
   else
-    echo "📦 Installation de $pkg..."
-    $DRY_RUN || sudo pacman -S --noconfirm "$pkg"
+    echo "📦 Installation de starship via le script officiel..."
+    if [[ "$DRY_RUN" == false ]]; then
+      curl -sS https://starship.rs/install.sh | sh
+    else
+      echo "🔍 [dry-run] curl -sS https://starship.rs/install.sh | sh"
+    fi
   fi
 }
 
@@ -58,9 +61,13 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_if_missing starship
+  install_starship_if_missing
   copy_config
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de starship terminées."
+if command -v starship &>/dev/null; then
+  echo "✅ Installation et configuration de starship $(starship --version) terminées."
+else
+  echo "⚠️ Starship ne semble pas être installé correctement."
+fi

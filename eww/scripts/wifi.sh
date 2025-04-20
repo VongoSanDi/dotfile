@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 interface=$(iw dev | awk '$1=="Interface"{print $2}')
 ssid=$(iw dev "$interface" link | awk -F': ' '/SSID/ {print $2}')

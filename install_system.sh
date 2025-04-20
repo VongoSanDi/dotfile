@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # ────────────────────────────────
@@ -57,6 +57,29 @@ else
   exit 1
 fi
 
+configure_xdg_user_dirs() {
+  echo "⚙️ Configuration des dossiers XDG personnalisés"
+
+  local xdg_dir="$HOME/.config/user-dirs.dirs"
+  local media="$HOME/Media"
+
+  mkdir -p "$media/Pictures" "$media/Videos" "$media/Music"
+
+  cat > "$xdg_dir" <<EOF
+XDG_DESKTOP_DIR="\$HOME/Desktop"
+XDG_DOWNLOAD_DIR="\$HOME/Downloads"
+XDG_DOCUMENTS_DIR="\$HOME/Documents"
+XDG_PICTURES_DIR="\$HOME/Media/Pictures"
+XDG_VIDEOS_DIR="\$HOME/Media/Videos"
+XDG_MUSIC_DIR="\$HOME/Media/Music"
+EOF
+
+  echo 'enabled=False' > "$HOME/.config/user-dirs.conf"
+
+  echo "🔄 Mise à jour avec xdg-user-dirs-update"
+  xdg-user-dirs-update
+}
+
 # Liste des paquets
 typeset -a PACKAGE_LIST_COMMON
 typeset -a PACKAGE_LIST_DEBIAN
@@ -65,6 +88,7 @@ typeset -a PACKAGE_LIST_ARCH
 PACKAGE_LIST_COMMON=(eza bat fd curl wget)
 PACKAGE_LIST_DEBIAN=()
 PACKAGE_LIST_ARCH=(
+  xdg-user-dirs
   pipewire
   pipewire-audio
   pipewire-alsa
@@ -131,11 +155,18 @@ else
       rm -rf ~/Downloads/paru
     else
       echo "🔍 [dry-run] makepkg -si"
-    fi
+    fixdg-user-dirs
+  fi
   else
     echo "✅ paru est déjà installé"
   fi
 fi
+
+# Install User DIRS
+install_package "xdg-user-dirs"
+
+# Create them immediatly
+configure_xdg_user_dirs
 
 # Combinaison des paquets communs et spécifiques à Arch
 packages_to_install=("${PACKAGE_LIST_COMMON[@]}" "${PACKAGE_LIST_ARCH[@]}")
@@ -185,11 +216,11 @@ else
 fi
 
 # Appel du script install_dotfile si présent
-if [[ -x "$HOME/.dotfile/install_dotfile.zsh" ]]; then
+if [[ -x "$HOME/.dotfile/install_dotfile.sh" ]]; then
   if [[ "$DRY_RUN" == false ]]; then
-    "$HOME/.dotfile/install_dotfile.zsh" "$@"
+    "$HOME/.dotfile/install_dotfile.sh" "$@"
   else
-    echo "🔍 [dry-run] $HOME/.dotfile/install_dotfile.zsh $*"
+    echo "🔍 [dry-run] $HOME/.dotfile/install_dotfile.sh $*"
   fi
 fi
 

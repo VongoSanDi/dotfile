@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Mode dry-run
@@ -17,8 +17,8 @@ else
   exit 1
 fi
 
-CONFIG_DIR="$HOME/.dotfile/mozilla/firefox"
-DEST_CONFIG_DIR="$HOME/.mozilla/firefox"
+CONFIG_DIR="$HOME/.dotfile/nushell/"
+DEST_CONFIG_DIR="$HOME/.config/nushell/"
 
 # Vérification et installation des dépendances
 install_if_missing() {
@@ -32,11 +32,19 @@ install_if_missing() {
 }
 
 copy_config() {
-  echo "📂 Configuration des fichiers liés aux apps mozilla → symlinks depuis $CONFIG_DIR"
+  echo "📂 Configuration de nushell → symlinks depuis $CONFIG_DIR"
 
   if [[ ! -d "$CONFIG_DIR" ]]; then
     echo "❌ Dossier $CONFIG_DIR introuvable"
     exit 1
+  fi
+
+  if $DRY_RUN; then
+    echo "   ↪ rm -rf $DEST_CONFIG_DIR"
+    echo "   ↪ mkdir -p $DEST_CONFIG_DIR"
+  else
+    rm -rf "$DEST_CONFIG_DIR"
+    mkdir -p "$DEST_CONFIG_DIR"
   fi
 
   for file in "$CONFIG_DIR"/*; do
@@ -49,9 +57,9 @@ copy_config() {
     fi
 
     if $DRY_RUN; then
-      echo "   ↪ ln -s $file $DEST_CONFIG_DIR/$filename"
+      echo "   ↪ cp $file $DEST_CONFIG_DIR/$filename"
     else
-      ln -sf "$file" "$DEST_CONFIG_DIR/$filename"
+      cp "$file" "$DEST_CONFIG_DIR/$filename"
     fi
   done
 }
@@ -61,9 +69,22 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_if_missing mozilla
+  install_if_missing nushell
   copy_config
 fi
 
-# Terminé !
-echo "✅ Installation et configuration de kitty terminées."
+if [[ "$SHELL" != *nu ]]; then
+  echo "🔁 Changement de shell par défaut vers Nushell..."
+
+  if chsh -s "$(which nu)" 2>/dev/null; then
+    echo "✅ Shell changé avec succès sans sudo."
+  elif sudo -v && sudo chsh -s "$(which nu)"; then
+    echo "✅ Shell changé avec succès avec sudo."
+  else
+    echo "❌ Échec du changement de shell. Essaie manuellement : chsh -s $(which nu)"
+  fi
+
+  echo "ℹ️  Redémarre ta session ou ton terminal pour que Nushell soit actif."
+else
+  echo "✅ Nushell est déjà ton shell par défaut."
+fi

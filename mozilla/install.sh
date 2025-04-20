@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # ─────────────────────────────
@@ -61,7 +61,7 @@ create_firefox_profile() {
   if ! $DRY_RUN; then
     mkdir -p "$DEST_CONFIG_DIR/firefox"
 
-    cat > "$profiles_ini" <<EOF
+    cat >"$profiles_ini" <<EOF
 [Profile0]
 Name=default-release
 IsRelative=1
@@ -100,7 +100,7 @@ link_configs() {
 
     for file in "$appdir"/*; do
       filename=$(basename "$file")
-      if [[ "$filename" == "install.zsh" ]]; then
+      if [[ "$filename" == "install.sh" ]]; then
         echo "⚠️ Ignoré : $filename"
         continue
       fi

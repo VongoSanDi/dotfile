@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Mode dry-run
@@ -17,8 +17,8 @@ else
   exit 1
 fi
 
-CONFIG_DIR="$HOME/.dotfile/kitty"
-DEST_CONFIG_DIR="$HOME/.config/kitty"
+CONFIG_DIR="$HOME/.dotfile/nvim"
+DEST_CONFIG_DIR="$HOME/.config/nvim"
 
 # Vérification et installation des dépendances
 install_if_missing() {
@@ -27,41 +27,42 @@ install_if_missing() {
     echo "✅ $pkg déjà installé"
   else
     echo "📦 Installation de $pkg..."
-    $DRY_RUN || sudo pacman -S "$pkg"
+    $DRY_RUN || sudo pacman -S --noconfirm "$pkg"
   fi
 }
 
-copy_config() {
-  echo "📂 Configuration de kitty → symlinks depuis $CONFIG_DIR"
+# Installation de Neovim et outils
+install_packages() {
+  install_if_missing base-devel
+  install_if_missing neovim
+  install_if_missing lazygit
+  install_if_missing ripgrep
+  install_if_missing fzf
+  install_if_missing fd
+  install_if_missing nodejs
+  install_if_missing npm
+}
 
+# Copie de la configuration
+copy_config() {
   if [[ ! -d "$CONFIG_DIR" ]]; then
-    echo "❌ Dossier $CONFIG_DIR introuvable"
+    echo "❌ Le dossier de config Neovim n'existe pas : $CONFIG_DIR"
     exit 1
   fi
 
+  echo "📂 Suppression de l'ancienne configuration Neovim..."
   if $DRY_RUN; then
     echo "   ↪ rm -rf $DEST_CONFIG_DIR"
-    echo "   ↪ mkdir -p $DEST_CONFIG_DIR"
   else
     rm -rf "$DEST_CONFIG_DIR"
-    mkdir -p "$DEST_CONFIG_DIR"
   fi
 
-  for file in "$CONFIG_DIR"/*; do
-    filename=$(basename "$file")
-
-    # Skip install.zsh
-    if [[ "$filename" == "install.zsh" ]]; then
-      echo "⚠️  Ignoré : $filename"
-      continue
-    fi
-
-    if $DRY_RUN; then
-      echo "   ↪ ln -s $file $DEST_CONFIG_DIR/$filename"
-    else
-      ln -sf "$file" "$DEST_CONFIG_DIR/$filename"
-    fi
-  done
+  echo "🔗 Création du lien symbolique..."
+  if $DRY_RUN; then
+    echo "   ↪ ln -s $CONFIG_DIR $DEST_CONFIG_DIR"
+  else
+    ln -s "$CONFIG_DIR" "$DEST_CONFIG_DIR"
+  fi
 }
 
 # Exécution principale
@@ -69,9 +70,9 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_if_missing kitty
+  install_packages
   copy_config
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de kitty terminées."
+echo "✅ Installation et configuration de Neovim terminées."

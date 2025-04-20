@@ -87,8 +87,6 @@ else
   install_plugins
 fi
 
-if [[ $SHELL != *zsh ]]; then
-  echo "🔁 Changement de shell vers Zsh..."
   if chsh -s "$(which zsh)" 2>/dev/null; then
     echo "✅ Shell changé avec succès sans sudo."
   elif sudo -v && sudo chsh -s "$(which zsh)"; then

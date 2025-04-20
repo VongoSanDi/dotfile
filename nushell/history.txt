@@ -1,0 +1,18 @@
+nvim .dotfile/nvim/install.sh
+nvim .dotfile/zsh/install.zsh
+nvim .dotfile/nushell/install.sh
+nvim .dotfile/starship/install.sh
+exit
+nvim .local/share/nushell/vendor/autoload/starship.nu
+ls -al .config/
+ls -al .config/nushell
+nvim .config/nushell/config.nu
+vi
+nvim .config/nushell/config.nu
+nvim .dotfile/nushell/config.nu
+bat .dotfile/aliases/aliases
+nvim .dotfile/nushell/config.nu
+config nu
+nvim .dotfile/nushell/config.nu
+config nu
+nvim .dotfile/nushell/config.nu
