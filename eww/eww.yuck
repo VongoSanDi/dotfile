@@ -1,7 +1,7 @@
-(deflisten workspaces :initial "[]" "~/.config/eww/scripts/workspace-get.zsh")
-(deflisten current_workspace :initial "1" "~/.config/eww/scripts/workspace-get-active.zsh")
-(defpoll wifi :initial "0" :interval "1m" "./scripts/wifi.zsh")
-(defpoll nombres_updates :interval "1h" "./scripts/updates.zsh")
+(deflisten workspaces :initial "[]" "~/.config/eww/scripts/workspace-get.sh")
+(deflisten current_workspace :initial "1" "~/.config/eww/scripts/workspace-get-active.sh")
+(defpoll wifi :initial "0" :interval "1m" "./scripts/wifi.sh")
+(defpoll nombres_updates :interval "1h" "./scripts/updates.sh")
 
 (defwidget bar []
   (centerbox :orientation "h"
@@ -44,7 +44,7 @@
 )
 
 (defwidget workspaces []
-  (eventbox :onscroll "~/.config/eww/scripts/workspace-change-active.zsh {} ${current_workspace}" :class "workspaces-widget"
+  (eventbox :onscroll "~/.config/eww/scripts/workspace-change-active.sh {} ${current_workspace}" :class "workspaces-widget"
     (box :space-evenly true
       (label :text "${workspaces}${current_workspace}" :visible false)
       (for workspace in workspaces
