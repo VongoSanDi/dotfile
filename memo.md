@@ -15,3 +15,9 @@ exit
 # Desactiver le bluetooth
 bluetoothctl
 power off
+
+
+# Connect to wifi
+iwctl
+device wlan0 scan
+station wlan0 conect <xxxxxxxx>
