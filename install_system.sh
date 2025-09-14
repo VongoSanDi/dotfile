@@ -37,14 +37,14 @@ link_environment_dir
 # Gestion des arguments
 for arg in "$@"; do
   case "$arg" in
-    --dry-run)
-      DRY_RUN=true
-      echo "🔍 Mode dry-run activé : aucune modification ne sera faite"
-      ;;
-    --no-reboot)
-      REBOOT=false
-      echo "🔕 Redémarrage automatique désactivé"
-      ;;
+  --dry-run)
+    DRY_RUN=true
+    echo "🔍 Mode dry-run activé : aucune modification ne sera faite"
+    ;;
+  --no-reboot)
+    REBOOT=false
+    echo "🔕 Redémarrage automatique désactivé"
+    ;;
   esac
 done
 
@@ -65,7 +65,7 @@ configure_xdg_user_dirs() {
 
   mkdir -p "$media/Pictures" "$media/Videos" "$media/Music"
 
-  cat > "$xdg_dir" <<EOF
+  cat >"$xdg_dir" <<EOF
 XDG_DESKTOP_DIR="\$HOME/Desktop"
 XDG_DOWNLOAD_DIR="\$HOME/Downloads"
 XDG_DOCUMENTS_DIR="\$HOME/Documents"
@@ -74,7 +74,7 @@ XDG_VIDEOS_DIR="\$HOME/Media/Videos"
 XDG_MUSIC_DIR="\$HOME/Media/Music"
 EOF
 
-  echo 'enabled=False' > "$HOME/.config/user-dirs.conf"
+  echo 'enabled=False' >"$HOME/.config/user-dirs.conf"
 
   echo "🔄 Mise à jour avec xdg-user-dirs-update"
   xdg-user-dirs-update
@@ -112,6 +112,7 @@ PACKAGE_LIST_ARCH=(
   papirus-icon-theme
   grim
   slurp
+  dunst
 )
 
 # Fonction d'installation
@@ -134,7 +135,6 @@ install_package() {
   fi
 }
 
-
 # Exécution principale
 if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
@@ -155,8 +155,8 @@ else
       rm -rf ~/Downloads/paru
     else
       echo "🔍 [dry-run] makepkg -si"
-    fixdg-user-dirs
-  fi
+      fixdg-user-dirs
+    fi
   else
     echo "✅ paru est déjà installé"
   fi

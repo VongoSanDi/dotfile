@@ -185,3 +185,18 @@ console-mode max
 exit
 unmount -R /mnt
 reboot
+
+# After installation
+## Font
+
+## Limit journal max size
+```
+SystemMaxUse=150M
+```
+```
+```
+```
+```
+
+# Credit
+Thanks to Pahasara who game me the idea of this guide: https://raw.githubusercontent.com/Pahasara/My-Linux-Journey/main/My%20Linux%20Journey.pdf

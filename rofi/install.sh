@@ -18,9 +18,8 @@ else
   exit 1
 fi
 
-CONFIG_DIR="$HOME/.dotfile/wofi"
-DEST_CONFIG_DIR="$HOME/.config/wofi"
-REPO_URL="https://github.com/quantumfate/wofi"
+CONFIG_DIR="$HOME/.dotfile/rofi"
+DEST_CONFIG_DIR="$HOME/.config/rofi"
 
 # Fonction pour installer les paquets si manquants
 install_if_missing() {
@@ -38,28 +37,17 @@ install_if_missing() {
   fi
 }
 
-# Fonction d'installation du thème Wofi Catppuccin
-install_theme() {
-  if [[ ! -d "$DEST_CONFIG_DIR/.git" ]]; then
-    echo "📥 Clonage du thème depuis GitHub..."
-    if $DRY_RUN; then
-      echo "   ↪ git clone $REPO_URL $DEST_CONFIG_DIR"
-    else
-      git clone --depth=1 "$REPO_URL" "$DEST_CONFIG_DIR"
-    fi
-  else
-    echo "✅ Thème Catppuccin-Wofi déjà présent, skip clone."
-  fi
-
-  echo "🔗 Création du lien symbolique vers ~/.config/wofi/config/config"
+# Fonction d'installation de Rofi
+install() {
+  echo "🔗 Création du lien symbolique vers ~/.config/rofi/"
   if $DRY_RUN; then
-    echo "   ↪ ln -sf $CONFIG_DIR/config/config $DEST_CONFIG_DIR/config/config"
+    echo "   ↪ ln -sf $CONFIG_DIR/ $DEST_CONFIG_DIR/"
   else
     if [[ ! -d "$DEST_CONFIG_DIR" ]]; then
       echo "❌ Le dossier $DEST_CONFIG_DIR est manquant. Clonage probablement échoué."
       exit 1
     fi
-    ln -sf "$CONFIG_DIR/config/config" "$DEST_CONFIG_DIR/config/config"
+    ln -sf "$CONFIG_DIR/" "$DEST_CONFIG_DIR/"
   fi
 }
 
@@ -68,9 +56,10 @@ if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
   echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
   exit 1
 else
-  install_if_missing wofi
-  install_theme
+  install_if_missing rofi
+  install_if_missing rofi-emoji
+  install
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de Wofi Catppuccin terminées."
+echo "✅ Installation et configuration de Rofi terminés."
