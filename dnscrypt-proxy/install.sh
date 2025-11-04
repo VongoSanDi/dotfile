@@ -50,6 +50,9 @@ copy_config() {
   $DRY_RUN || sudo cp "$CONFIG_DIR/blocked-names.txt" "$DEST_DIR/"
   $DRY_RUN || sudo chmod 644 "$DEST_DIR/blocked-names.txt"
 
+  $DRY_RUN || sudo cp "$CONFIG_DIR/allowed-names.txt" "$DEST_DIR/"
+  $DRY_RUN || sudo chmod 644 "$DEST_DIR/allowed-names.txt"
+
 }
 
 # Configuration spécifique Arch
@@ -60,7 +63,7 @@ configure_arch() {
   echo "🧹 Mise à jour de /etc/resolv.conf..."
   $DRY_RUN || sudo chattr -i /etc/resolv.conf 2>/dev/null || true
   if ! $DRY_RUN; then
-    cat <<EOF | sudo tee /etc/resolv.conf > /dev/null
+    cat <<EOF | sudo tee /etc/resolv.conf >/dev/null
 nameserver ::1
 nameserver 127.0.0.1
 options edns0
