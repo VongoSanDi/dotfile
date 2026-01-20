@@ -109,7 +109,9 @@ PACKAGE_LIST_ARCH=(
   noto-fonts-cjk
   unzip
   brightnessctl
+  playerctl
   papirus-icon-theme
+  cliphist
   grim
   slurp
   dunst

@@ -74,8 +74,10 @@ install_packages() {
   install_if_missing hyprland
   install_if_missing hypridle
   install_if_missing hyprlock
+  install_if_missing hyprlauncher
   install_if_missing hyprsunset
   install_if_missing hyprcursor
+  install_if_missing hyprtoolkit
   install_if_missing wl-clipboard
   install_if_missing uwsm
   install_if_missing xdg-desktop-portal-hyprland
