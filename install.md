@@ -73,7 +73,7 @@ sudo mount /dev/nvme0n1p4 /mnt/home
 # Essential packages to install
 # intel-ucore -> Intel processors fixes
 # iwd -> Wifi manager
-pacstrap -K /mnt base linux-hardened linux-firmware intel-ucode iwd neovim sudo man-db man-pages git
+pacstrap -K /mnt base linux-zen linux-firmware intel-ucode iwd neovim sudo man-db man-pages git
 
 # TLP: Optimize Linux Laptop Battery Life
 This package is provided by arch, it helps improve the laptop battery life
