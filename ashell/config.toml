@@ -4,7 +4,7 @@ position = "Top"
 app_launcher_cmd = "hyprlauncher"
 
 [modules]
-left = [ [ "Updates", "Workspaces", "MediaPlayer" ] ]
+left = [ "Updates", "Workspaces", "MediaPlayer" ]
 center = [ "WindowTitle" ]
 right = [ "SystemInfo", [  "Tray", "Clock", "Privacy", "Settings" ] ]
 
