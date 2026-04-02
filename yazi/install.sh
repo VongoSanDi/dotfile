@@ -79,4 +79,4 @@ else
 fi
 
 # Terminé !
-echo "✅ Installation et configuration de kitty terminées."
+echo "✅ Installation et configuration de Yazi terminées."

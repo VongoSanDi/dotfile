@@ -52,7 +52,8 @@ $env.config.history.max_size = 5_000_000
 ###############
 #   STARSHIP  #
 ###############
-use ($nu.data-dir | path join "vendor/autoload/starship.nu")
+mkdir ($nu.data-dir | path join "vendor/autoload")
+starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
 
 ###############
 #   ALIASES   #
