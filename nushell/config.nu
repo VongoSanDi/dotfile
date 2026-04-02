@@ -1,65 +1,34 @@
-# config.nu
-#
-# Installed by:
-# version = "0.103.0"
-#
-# This file is used to override default Nushell settings, define
-# (or import) custom commands, or run any other startup tasks.
-# See https://www.nushell.sh/book/configuration.html
-#
-# This file is loaded after env.nu and before login.nu
-#
-# You can open this file in your default editor using:
-# config nu
-#
-# See `help config nu` for more options
-#
-# You can remove these comments if you want or leave
-# them for future reference.
-
-###############
-#    UTILS    #
-###############
-use std/util "path add"
-
-###############
-#   EDITOR    #
-###############
-$env.config.edit_mode = "vi"
+## GENERAL
 $env.config.buffer_editor = "nvim"
-$env.STARSHIP_SHELL = "nu"
+$env.config.show_banner = false
+$env.config.use_kitty_protocol = true
+$env.config.history.max_size = 200
+$env.LS_COLORS = (vivid generate catppuccin-mocha)
 
-###############
-#   GLOBAL    #
-###############
-path add "~/.local/bin"
-path add ($env.HOME | path join ".bun/bin")
-$env.DOTFILES = ($env.HOME | path join ".dotfile")
+## ALIASES
+alias vi = nvim
+alias lg = lazygit
+alias ls = eza --long --icons --header --no-permissions --created --modified --no-user
+alias lsa = eza --all --long --icons --header --no-permissions --created --modified --no-user
+alias lt = eza --icons --tree --level=1 --group-directories-first -h --long --no-permissions --no-user --no-time 
+alias lt2 = eza --icons --tree --level=2 --group-directories-first -h --long --no-permissions --no-user --no-time 
+alias lt3 = eza --icons --tree --level=3 --group-directories-first -h --long --no-permissions --no-user --no-time
+alias lta = eza --icons --tree --group-directories-first -h --long --no-permissions --no-user --no-time
 
-###############
-#   THEMING   #
-###############
-$env.config.table.mode = "basic_compact"
+alias rm = rm -iv
 
-###############
-#   HISTORY   #
-###############
-# max_size (int): The maximum number of entries allowed in the history.
-# After exceeding this value, the oldest history items will be removed
-# as new commands are added.
-$env.config.history.max_size = 5_000_000
+alias shutdown = systemctl shutdown
+alias reboot = systemctl reboot
+alias update = paru -Syu
 
-###############
-#   STARSHIP  #
-###############
+## FUNCTIONS
+# Create and navigate into a new directory
+def mkcd [dir] {
+    mkdir $dir
+    cd $dir
+}
+
+
+## NUSHELL
 mkdir ($nu.data-dir | path join "vendor/autoload")
 starship init nu | save -f ($nu.data-dir | path join "vendor/autoload/starship.nu")
-
-###############
-#   ALIASES   #
-###############
-# NVIM
-alias vi = nvim
-
-# LAZYGIT
-alias lg = lazygit
