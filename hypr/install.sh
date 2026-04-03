@@ -19,8 +19,8 @@ fi
 
 CONFIG_DIR="$HOME/.dotfile/hypr"
 DEST_CONFIG_DIR="$HOME/.config/hypr"
-THEME_URL="https://raw.githubusercontent.com/catppuccin/hyprland/main/themes/macchiato.conf"
-THEME_FILE="macchiato.conf"
+THEME_URL="https://raw.githubusercontent.com/catppuccin/hyprland/main/themes/mocha.conf"
+THEME_FILE="mocha.conf"
 
 # Vérification et installation des dépendances
 install_if_missing() {
@@ -101,7 +101,7 @@ copy_config() {
     ln -s "$CONFIG_DIR" "$DEST_CONFIG_DIR"
   fi
 
-  echo "📥 Téléchargement du thème Catppuccin macchiato..."
+  echo "📥 Téléchargement du thème Catppuccin mocha..."
   if $DRY_RUN; then
     echo "   ↪ curl -fsSL $THEME_URL -o $DEST_CONFIG_DIR/$THEME_FILE"
   else
