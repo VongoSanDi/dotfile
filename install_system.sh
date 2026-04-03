@@ -10,9 +10,14 @@ link_environment_dir() {
 
   echo "🔗 Lien symbolique pour environment.d → $DEST"
 
+  # If the destination folder already exist, we delete it so we can start anew
+  # If it doesn't exist we create it
   if [[ -d "$DEST" || -L "$DEST" ]]; then
     echo "📦 Suppression de l'ancien $DEST"
     $DRY_RUN || rm -rf "$DEST"
+  else
+    echo "Creation du dossier de destination"
+    mkdir -p $DEST
   fi
 
   if [[ -d "$SRC" ]]; then
@@ -87,11 +92,14 @@ typeset -a PACKAGE_LIST_ARCH
 
 PACKAGE_LIST_COMMON=(eza bat fd curl wget)
 PACKAGE_LIST_DEBIAN=()
+# vivid is used for the LS_COLOR environment variable
+# jq is used for formatting json files (mostly kulala response at this moment)
 PACKAGE_LIST_ARCH=(
   xdg-user-dirs
   pipewire
   pipewire-audio
   pipewire-alsa
+  pipewire-jack
   wireplumber
   ttf-jetbrains-mono-nerd
   vim-spell-fr
@@ -107,6 +115,7 @@ PACKAGE_LIST_ARCH=(
   noto-fonts
   noto-fonts-emoji
   noto-fonts-cjk
+  ttf-jetbrains-mono-nerd
   unzip
   brightnessctl
   playerctl
@@ -114,7 +123,9 @@ PACKAGE_LIST_ARCH=(
   cliphist
   grim
   slurp
-  dunst
+  lazygit
+  vivid
+  jq
 )
 
 # Fonction d'installation
@@ -137,12 +148,8 @@ install_package() {
   fi
 }
 
-# Exécution principale
-if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
-  echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
-  exit 1
-else
-  # Vérifier si paru est installé
+# Paru installation as the extra packet manager
+install_paru() {
   if ! command -v paru &>/dev/null; then
     echo "🔧 Installation de paru..."
     mkdir -p ~/Downloads/paru
@@ -162,6 +169,16 @@ else
   else
     echo "✅ paru est déjà installé"
   fi
+}
+
+# Exécution principale
+if [[ "$DISTRO" == "debian" || "$DISTRO" == "ubuntu" ]]; then
+  echo "❌ Ce script ne prend plus en charge Debian/Ubuntu pour le moment."
+  exit 1
+else
+  # Vérifier si paru est installé
+  #install_paru
+  echo "on passe l'install de paru pour le moment"
 fi
 
 # Install User DIRS
