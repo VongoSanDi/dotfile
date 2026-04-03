@@ -8,6 +8,8 @@ hypr/macchiato.conf
 nvim.bak/
 nvim/*.lock
 nvim/lazy-lock.json
+nvim/lua/plugins/parrot.lua
+nvim/.gitignore
 zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory
