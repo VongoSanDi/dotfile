@@ -1,10 +1,13 @@
 *.swp
 *.bak
 .DS_Store
-/nvim.bak/
-/nvim/*.lock
-hypr/icons/
 bat/themes/
+hypr/icons/
+hypr/mocha.conf
+hypr/macchiato.conf
+nvim.bak/
+nvim/*.lock
+nvim/lazy-lock.json
 zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory
