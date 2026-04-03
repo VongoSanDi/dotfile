@@ -9,3 +9,4 @@ zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory
 zsh/.zsh_history
+nushell/history.txt

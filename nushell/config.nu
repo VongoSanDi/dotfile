@@ -9,7 +9,7 @@ $env.LS_COLORS = (vivid generate catppuccin-mocha)
 alias vi = nvim
 alias lg = lazygit
 alias ls = eza --long --icons --header --no-permissions --created --modified --no-user
-alias lsa = eza --all --long --icons --header --no-permissions --created --modified --no-user
+alias lsa = eza --all --long --icons --header --no-permissions --created --modified --no-user --group-directories-first --modified
 alias lt = eza --icons --tree --level=1 --group-directories-first -h --long --no-permissions --no-user --no-time 
 alias lt2 = eza --icons --tree --level=2 --group-directories-first -h --long --no-permissions --no-user --no-time 
 alias lt3 = eza --icons --tree --level=3 --group-directories-first -h --long --no-permissions --no-user --no-time
@@ -17,7 +17,7 @@ alias lta = eza --icons --tree --group-directories-first -h --long --no-permissi
 
 alias rm = rm -iv
 
-alias shutdown = systemctl shutdown
+alias poweroff = systemctl poweroff
 alias reboot = systemctl reboot
 alias update = paru -Syu
 
