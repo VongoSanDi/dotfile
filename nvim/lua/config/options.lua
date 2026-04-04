@@ -5,7 +5,7 @@
 local opt = vim.opt
 
 opt.background = "dark"
-opt.spelllang = { "en_us", "fr" }
+opt.spelllang = { "en", "fr" }
 opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
 opt.wrap = true -- Enable line wrapping
 opt.breakindent = true -- Indentation visuelle des lignes repliées
