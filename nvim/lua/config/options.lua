@@ -11,3 +11,4 @@ opt.wrap = true -- Enable line wrapping
 opt.breakindent = true -- Indentation visuelle des lignes repliées
 opt.scrolloff = 5 -- Lines of context
 opt.swapfile = false -- turn off swapfile
+opt.sh = "nu"
