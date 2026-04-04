@@ -6,7 +6,7 @@ $env.config.history.max_size = 200
 $env.LS_COLORS = (vivid generate catppuccin-mocha)
 
 ## ALIASES
-alias vi = nvim
+alias n = nvim
 alias lg = lazygit
 alias ls = eza --long --icons --header --no-permissions --created --modified --no-user
 alias lsa = eza --all --long --icons --header --no-permissions --created --modified --no-user --group-directories-first --modified

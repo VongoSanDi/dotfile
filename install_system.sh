@@ -70,13 +70,13 @@ configure_xdg_user_dirs() {
 
   mkdir -p "$media/Pictures" "$media/Videos" "$media/Music"
 
-  cat >"$xdg_dir" <<EOF
-XDG_DESKTOP_DIR="\$HOME/Desktop"
-XDG_DOWNLOAD_DIR="\$HOME/Downloads"
-XDG_DOCUMENTS_DIR="\$HOME/Documents"
-XDG_PICTURES_DIR="\$HOME/Media/Pictures"
-XDG_VIDEOS_DIR="\$HOME/Media/Videos"
-XDG_MUSIC_DIR="\$HOME/Media/Music"
+  cat >"$xdg_dir" <<'EOF'
+XDG_DESKTOP_DIR="$HOME/Desktop"
+XDG_DOWNLOAD_DIR="$HOME/Downloads"
+XDG_DOCUMENTS_DIR="$HOME/Documents"
+XDG_PICTURES_DIR="$HOME/Media/Pictures"
+XDG_VIDEOS_DIR="$HOME/Media/Videos"
+XDG_MUSIC_DIR="$HOME/Media/Music"
 EOF
 
   echo 'enabled=False' >"$HOME/.config/user-dirs.conf"
@@ -94,8 +94,8 @@ PACKAGE_LIST_COMMON=(eza bat fd curl wget)
 PACKAGE_LIST_DEBIAN=()
 # vivid is used for the LS_COLOR environment variable
 # jq is used for formatting json files (mostly kulala response at this moment)
+# yazi is a terminal file manager
 PACKAGE_LIST_ARCH=(
-  xdg-user-dirs
   pipewire
   pipewire-audio
   pipewire-alsa
@@ -126,6 +126,7 @@ PACKAGE_LIST_ARCH=(
   lazygit
   vivid
   jq
+  yazi
 )
 
 # Fonction d'installation
