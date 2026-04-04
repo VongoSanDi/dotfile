@@ -38,11 +38,11 @@ t
   Partition number: 2
   Hex code: 23
 
-## New we will create the swap partition
+## New we will create the swap partition (SWAP > RAM for hibernate)
 n
   Partition number: 3
   First sector: Entrée
-  Last sector: +4G
+  Last sector: +16G
 
 ## Change the type of the partition
 t
@@ -156,8 +156,8 @@ lsblk -f | grep swap -> To find the swap partition UUID
 ```
 ```
 ```
-title   Arch Linux Zen
-linux   /vmlinuz-linux-zed
+title   Arch Linux
+linux   /vmlinuz-linux
 initrd  /intel-ucode.img
 initrd  /initramfs-linux-zen.img
 options root=PARTUUID=XXXX rw i915.enable_psr=1 i915.enable_fbc=1 i915.enable_guc=2 quiet resume=PARTUUID=XXXX # Ne pas oublier le rw apres le PARTUUID, il faut ajouter le quiet et resume si on est pas en hardened
