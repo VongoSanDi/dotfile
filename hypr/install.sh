@@ -83,6 +83,7 @@ install_packages() {
   install_if_missing xdg-desktop-portal-hyprland
   install_if_missing xdg-desktop-portal
   install_if_missing wayland-protocols
+  install_if_missing hyprshot
 }
 
 # Copie de la configuration
