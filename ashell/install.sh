@@ -39,6 +39,7 @@ install_if_missing() {
 # Installation de Ashell
 install_packages() {
   install_if_missing ashell
+  # install_if_missing upower # A test si ashell install upower en dépendances
 }
 
 # Copie de la configuration
