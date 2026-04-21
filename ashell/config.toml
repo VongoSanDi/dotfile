@@ -5,7 +5,7 @@ position = "Top"
 [modules]
 left = [ [ "appLauncher", "Workspaces" ] ]
 center = [ "WindowTitle" ]
-right = [ "SystemInfo", "MediaPlayer", [  "Tray", "Clock", "Privacy", "Settings" ] ]
+right = [ "SystemInfo", "MediaPlayer", [  "Tray", "Tempo", "Privacy", "Settings" ] ]
 
 [workspaces]
 visibility_mode = "All"
@@ -36,7 +36,7 @@ alert_threshold = 85
 [system_info.temperature]
 warn_threshold = 60
 alert_threshold = 80
-sensor = "acpitz temp1"
+sensor = "coretemp Package id 0"
 
 [settings]
 lock_cmd = "playerctl --all-players pause; nixGL hyprlock &"
@@ -50,8 +50,8 @@ bluetooth_indicator_format = "Icon"
 brightness_indicator_format = "Icon"
 indicators = [ "IdleInhibitor", "PowerProfile", "Audio", "Microphone", "Bluetooth", "Network", "Vpn", "Battery", "Brightness" ]
 
-[clock]
-format = "%D %r"
+[tempo]
+clock_format = "%a %d %b %R"
 
 [appearance]
 style = "Islands"
