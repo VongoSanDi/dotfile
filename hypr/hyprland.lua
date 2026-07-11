@@ -34,7 +34,8 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal = "kitty"
-local fileManager = "terminal nu -c yazi; exit"
+--local fileManager = "terminal nu -c yazi; exit"
+local fileManager = "kitty -e yazi"
 local menu = "hyprlauncher"
 local browser = "firefox"
 -------------------
@@ -64,6 +65,13 @@ end)
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("GTK_THEME", "Papirus-Dark:dark")
+
+-- Set these variable here because Yazi look for these in the startup shell, I use bash as the system bash and nushell as the interactive shell
+-- so yazi have difficulties finding thse env var
+-- These env var are also set in nushell, but yazi don't see them
+-- TODO find a better solution for this
+hl.env("EDITOR", "/usr/bin/nvim")
+hl.env("VISUAL", "/usr/bin/nvim")
 
 -----------------------
 ----- PERMISSIONS -----
