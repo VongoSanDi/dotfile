@@ -5,9 +5,8 @@ bat/themes/
 hypr/icons/
 hypr/mocha.conf
 hypr/macchiato.conf
-nvim.bak/
 nvim/*.lock
-nvim/lazy-lock.json
+nvim/nvim-pack-lock.json
 nvim/lua/plugins/parrot.lua
 nvim/.gitignore
 zsh/plugins/
