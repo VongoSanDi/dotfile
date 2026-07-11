@@ -1,0 +1,48 @@
+{
+  "plugins": {
+    "catppuccin": {
+      "rev": "e068ab5f8261f23f6f71ffd8791ae40315b77b9c",
+      "src": "https://github.com/catppuccin/nvim"
+    },
+    "friendly-snippets": {
+      "rev": "6cd7280adead7f586db6fccbd15d2cac7e2188b9",
+      "src": "https://github.com/rafamadriz/friendly-snippets"
+    },
+    "fzf-lua": {
+      "rev": "39da6060d53659acf3ec118200bc48721b29b8fd",
+      "src": "https://github.com/ibhagwan/fzf-lua"
+    },
+    "gitsigns.nvim": {
+      "rev": "eb60cc7b94c46005237fd34170d76f3a089a90aa",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
+    "mini.cmdline": {
+      "rev": "8e3fe6ee41a960226bc0dc663120363a40bc18bd",
+      "src": "https://github.com/nvim-mini/mini.cmdline"
+    },
+    "mini.completion": {
+      "rev": "7c486f877f25bb44d5f6c058c9f4582acc8520e3",
+      "src": "https://github.com/nvim-mini/mini.completion"
+    },
+    "mini.diff": {
+      "rev": "0743d26bd858ebe32efcf5c86a91a422a000f273",
+      "src": "https://github.com/nvim-mini/mini.diff"
+    },
+    "mini.files": {
+      "rev": "4b3db6f1bf76fc67582e8fe7b2fd04b971707b3f",
+      "src": "https://github.com/nvim-mini/mini.files"
+    },
+    "mini.snippets": {
+      "rev": "cf5607c66571d130663fd20761d7cbebdbbf713d",
+      "src": "https://github.com/nvim-mini/mini.snippets"
+    },
+    "oil.nvim": {
+      "rev": "b73018b75affd13fa38e2fc94ef753b465f770d7",
+      "src": "https://github.com/stevearc/oil.nvim"
+    },
+    "rose-pine": {
+      "rev": "ff483051a47e27d84bdef47703538df1ed9f4a47",
+      "src": "https://github.com/rose-pine/neovim"
+    }
+  }
+}

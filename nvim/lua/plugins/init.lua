@@ -1,0 +1,7 @@
+require("plugins.fzf-lua")
+require("plugins.catppuccin")
+require("plugins.mini-files")
+require("plugins.mini-diff")
+require("plugins.mini-cmdline")
+require("plugins.mini-completion")
+require("plugins.mini-snippets")
