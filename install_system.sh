@@ -95,11 +95,14 @@ PACKAGE_LIST_DEBIAN=()
 # vivid is used for the LS_COLOR environment variable
 # jq is used for formatting json files (mostly kulala response at this moment)
 # yazi is a terminal file manager
+# shfmt is a shell parser, formatter, and interpreter with bash support.
+# zoxide is a smarter cd command
 PACKAGE_LIST_ARCH=(
   pipewire
   pipewire-audio
   pipewire-alsa
   pipewire-jack
+  pipewire-pulse
   wireplumber
   ttf-jetbrains-mono-nerd
   vim-spell-fr
@@ -127,6 +130,9 @@ PACKAGE_LIST_ARCH=(
   vivid
   jq
   yazi
+  rustup
+  shfmt
+  zoxide
 )
 
 # Fonction d'installation
