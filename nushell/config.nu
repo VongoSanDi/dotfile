@@ -2,6 +2,7 @@
 $env.config.buffer_editor = "nvim"
 $env.EDITOR = "nvim"
 $env.VISUAL = "nvim"
+$env.GIT_EDITOR = "nvim"
 $env.config.show_banner = false
 $env.config.use_kitty_protocol = true
 $env.config.history.max_size = 200
@@ -46,4 +47,9 @@ def --env y [...args] {
 	}
 	rm -fp $tmp
 }
+
+## ZOXIDE
+# zoxide init nushell | save -f ~/.zoxide.nu
+
 source "~/.cargo/env.nu"
+source ~/.zoxide.nu
