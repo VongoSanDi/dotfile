@@ -1,10 +1,7 @@
 -- [[ Autocomplete Engine ]]
-vim.pack.add {
-  'https://github.com/saghen/blink.lib',
-  { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range('*') },
-}
-
-require('blink.cmp').setup {
+vim.pack.add({'https://github.com/saghen/blink.cmp' })
+local cmp = require('blink.cmp')
+cmp.setup({
   keymap = {
     -- 'default' (recommended) for mappings similar to built-in completions
     --   <c-y> to accept ([y]es) the completion.
@@ -99,6 +96,6 @@ require('blink.cmp').setup {
 
   -- Shows a signature help window while you type arguments for a function
   signature = { enabled = true },
-}
+})
 
 -- vim: ts=2 sts=2 sw=2 et
