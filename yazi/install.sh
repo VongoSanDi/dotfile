@@ -65,7 +65,7 @@ copy_config() {
 }
 
 install_flavor() {
-  ya pkg add yazi-rs/flavors:catppuccin-macchiato
+  ya pkg add yazi-rs/flavors:mocha
 }
 
 # Exécution principale
