@@ -1,5 +1,5 @@
 vim.pack.add { 'https://github.com/stevearc/conform.nvim' }
-require('conform').setup {
+require('conform').setup({
   log_level = vim.log.levels.DEBUG,
   notify_on_error = false,
   format_on_save = function(bufnr)
@@ -27,6 +27,7 @@ require('conform').setup {
     lua = { 'stylua' },
     sh = { 'shfmt' },
     rust = { 'rustfmt' },
+    toml = {'tombi'},
     -- Conform can also run multiple formatters sequentially
     -- python = { "isort", "black" },
     --
@@ -36,7 +37,7 @@ require('conform').setup {
     -- For filetypes without a formatter:
     ['_'] = { 'trim_whitespace', 'trim_newlines' },
   },
-}
+})
 
 -- Use conform for gq.
 vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"

@@ -1,6 +1,7 @@
 -- Enable the following language servers
 --  See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
+---@type vim.lsp.Config
 return {
   -- clangd = {},
   -- gopls = {},
@@ -51,5 +52,10 @@ return {
     },
   },
     stylua = {}, -- Used to format Lua code
+    tombi = {
+      cmd = { 'tombi', 'lsp' },
+  filetypes = { 'toml' },
+  root_markers = { 'tombi.toml', 'pyproject.toml', '.git' }
+    }
 
 }
