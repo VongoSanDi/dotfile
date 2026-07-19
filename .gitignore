@@ -5,12 +5,13 @@ bat/themes/
 hypr/icons/
 hypr/mocha.conf
 hypr/macchiato.conf
+nushell/history.txt
 nvim/*.lock
 nvim/nvim-pack-lock.json
 nvim/lua/plugins/parrot.lua
 nvim/.gitignore
+yazi/flavors/
 zsh/plugins/
 zsh/.zcompdump
 zsh/.zhistory
 zsh/.zsh_history
-nushell/history.txt
